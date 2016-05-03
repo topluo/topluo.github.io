@@ -1,0 +1,1334 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="极简小站,mousycoder" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="本质隔离级别定义了数据库系统中一个操作产生的影响什么时候以哪种方式可以对其他并发操作可见，隔离性是事务的ACID中的一个重要属性，核心是对锁的操作。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【深入浅出事务】（3）：事务的隔离级别（超详细）">
+<meta property="og:url" content="http://mousycoder.com/2016/02/19/explain-transaction-in-simple-language-3/index.html">
+<meta property="og:site_name" content="极简小站">
+<meta property="og:description" content="本质隔离级别定义了数据库系统中一个操作产生的影响什么时候以哪种方式可以对其他并发操作可见，隔离性是事务的ACID中的一个重要属性，核心是对锁的操作。">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/90954844.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/61685662.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/73618812.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/74093196.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/54960057.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/57549569.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/74093196.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/53102740.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/95572221.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/1004025.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/30247917.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/45993213.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/65339518.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/64957505.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/64957505.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/56612469.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/23067042.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/14322414.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/20907793.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/39675683.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/80444924.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/10010083.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-17/57972101.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/64957505.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/51402332.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/31285715.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/79244193.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/51987338.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/75666180.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/84030903.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/55662468.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/76935528.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/24769346.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/64957505.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/51402332.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/31285715.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/38096506.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/4000898.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/64957505.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/76746572.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/79244193.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/10054228.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/34152194.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/58133194.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/64957505.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/8058034.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/58578014.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/31285715.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/39415272.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/16646481.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/79685446.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/78943312.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/66424716.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/64957505.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/8058034.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/58578014.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/31285715.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/19435945.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/28066126.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/95060833.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/52846863.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/64957505.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/8058034.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/41442542.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/47195290.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/1217490.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/60770010.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/58525187.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/35098107.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-18/64957505.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/22943658.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/2405821.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/90514676.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-2-19/38010863.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-15/19697314.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-15/64333912.jpg">
+<meta property="og:updated_time" content="2016-04-20T11:53:02.477Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【深入浅出事务】（3）：事务的隔离级别（超详细）">
+<meta name="twitter:description" content="本质隔离级别定义了数据库系统中一个操作产生的影响什么时候以哪种方式可以对其他并发操作可见，隔离性是事务的ACID中的一个重要属性，核心是对锁的操作。">
+<meta name="twitter:image" content="http://static.mousycoder.com/16-2-17/90954844.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 12508341,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 【深入浅出事务】（3）：事务的隔离级别（超详细） | 极简小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?16bedf24666607f78e3909b2d78ed8b2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="http://s6.cnzz.com/stat.php?id=1258224851&web_id=1258224851" type="text/javascript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">极简小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">一个分享技术干货的小清新网站</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project" rel="section">
+            
+              <i class="menu-item-icon fa fa-heart fa-fw"></i> <br />
+            
+            项目
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '2Lnpxp9f1uxjLcyTgoeg','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                【深入浅出事务】（3）：事务的隔离级别（超详细）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-02-19T18:41:53+08:00" content="2016-02-19">
+              2016-02-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/总结/" itemprop="url" rel="index">
+                    <span itemprop="name">总结</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/19/explain-transaction-in-simple-language-3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/19/explain-transaction-in-simple-language-3/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="本质"><a href="#本质" class="headerlink" title="本质"></a>本质</h2><p>隔离级别定义了数据库系统中一个操作产生的影响什么时候以哪种方式可以对其他并发操作可见，隔离性是事务的ACID中的一个重要属性，核心是对锁的操作。</p>
+<a id="more"></a>
+<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h3 id="从数据库系统角度"><a href="#从数据库系统角度" class="headerlink" title="从数据库系统角度"></a>从数据库系统角度</h3><ul>
+<li><strong>共享锁(Shared Lock)</strong></li>
+</ul>
+<p>读锁，保证数据只能读取，不能被修改。<br>如果事务A对数据M加上S锁，则事务A可以读记录M但不能修改记录M，其他事务(这里用事务B)只能对记录M再加上S锁，不能加X锁，直到事务A释放了记录M上的S锁，保证了其他事务(事务B)可以读记录M，但在事务A释放M上的S锁之前不能对记录M进行任何修改。</p>
+<p><strong>例子: MySql 5.5 证明S锁的特性。</strong></p>
+<p>数据准备</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`test1`</span> (<span class="string">`id`</span>  <span class="built_in">bigint</span>(<span class="number">1</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> ,<span class="string">`name`</span>  <span class="built_in">varchar</span>(<span class="number">1</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span> ,PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test1 <span class="keyword">VALUES</span>(<span class="number">1</span>,<span class="number">1</span>),(<span class="number">2</span>,<span class="number">2</span>),(<span class="number">3</span>,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<ol>
+<li>设置事务为手动提交，方便证明上诉结论(mysql默认为自动提交，执行单句sql其实包含 开启事务，执行sql，提交事务，3个步骤)。<br><img src="http://static.mousycoder.com/16-2-17/90954844.jpg" alt=""></li>
+<li>客户端A开启一个事务A。<br><img src="http://static.mousycoder.com/16-2-17/61685662.jpg" alt=""></li>
+<li>客户端A给test1表加上读锁。<br><img src="http://static.mousycoder.com/16-2-17/73618812.jpg" alt=""></li>
+<li>查询test1表原有的数据(加上S锁后，可以读数据)。<br><img src="http://static.mousycoder.com/16-2-17/74093196.jpg" alt=""></li>
+<li>事务A修改数据(加上S锁后，无法修改数据)。<br><img src="http://static.mousycoder.com/16-2-17/54960057.jpg" alt=""></li>
+<li>B客户端开启事务B。<br><img src="http://static.mousycoder.com/16-2-17/57549569.jpg" alt=""></li>
+<li>事务B对记录M查询(因为是S锁，其他事务可以对记录A进行select )。<br><img src="http://static.mousycoder.com/16-2-17/74093196.jpg" alt=""></li>
+<li>事务B对记录M加读锁(事务A对记录A加上S锁后，事务B同样也可以对记录A加上S锁，证明了，mysql里的读锁就是S锁，具有共享)。<br><img src="http://static.mousycoder.com/16-2-17/53102740.jpg" alt=""></li>
+<li>事务B对记录M加写锁(一直处于等待状态，被挂起,具体挂起的原因可以见：<a href="http://www.myexception.cn/database/1836599.html" target="_blank" rel="external">Innodb行锁源码学习</a>。<br><img src="http://static.mousycoder.com/16-2-17/95572221.jpg" alt=""></li>
+<li>事务B对记录M修改(一直处于等待状态，被挂起)。<br><img src="http://static.mousycoder.com/16-2-17/1004025.jpg" alt=""></li>
+<li>事务A释放M上的S锁。<br><img src="http://static.mousycoder.com/16-2-17/30247917.jpg" alt=""><br>此时事务B才得到响应。<br><img src="http://static.mousycoder.com/16-2-17/45993213.jpg" alt=""><br><img src="http://static.mousycoder.com/16-2-17/65339518.jpg" alt=""></li>
+</ol>
+<p>说明了，只有释放了读锁，另外一个事务才能加写锁，或者更新数据。</p>
+<ul>
+<li><strong>排他锁(X 锁)</strong></li>
+</ul>
+<p>写锁，若事务A对数据对象M加上X锁，事务A可以读记录M也可以修改记录M，其他事务(事务B)不能再对记录M加任何锁，直到事务A释放记录M上的锁，保证了其他事务(事务B)在事务A释放记录M上的锁之前不能再读取和修改记录M。</p>
+<p><strong>例子：Mysql 5.5，证明X锁的特性。</strong></p>
+<ol>
+<li>客户端A设置手动提交，并且开启事务A。<br><img src="http://static.mousycoder.com/16-2-18/64957505.jpg" alt=""></li>
+<li>客户端B设置手动提交，并且开启事务B。<br><img src="http://static.mousycoder.com/16-2-18/64957505.jpg" alt=""></li>
+<li>事务A给记录M加上X锁。<br><img src="http://static.mousycoder.com/16-2-17/56612469.jpg" alt=""></li>
+<li>事务A可以读记录M也可以修改记录M。<br><img src="http://static.mousycoder.com/16-2-17/23067042.jpg" alt=""></li>
+<li>事务B不能对记录M加任何锁。<br><img src="http://static.mousycoder.com/16-2-17/14322414.jpg" alt=""><img src="http://static.mousycoder.com/16-2-17/20907793.jpg" alt=""></li>
+<li>事务B也不能对记录M进行查询和修改。<br><img src="http://static.mousycoder.com/16-2-17/39675683.jpg" alt=""><img src="http://static.mousycoder.com/16-2-17/80444924.jpg" alt=""></li>
+<li>事务A释放记录M上的X锁。<br><img src="http://static.mousycoder.com/16-2-17/10010083.jpg" alt=""></li>
+<li>事务B阻塞的进程被执行，中断了6秒。<br><img src="http://static.mousycoder.com/16-2-17/57972101.jpg" alt=""></li>
+</ol>
+<h3 id="从程序员角度"><a href="#从程序员角度" class="headerlink" title="从程序员角度"></a>从程序员角度</h3><ul>
+<li>悲观锁(Pessimistic[ˌpesɪˈmɪstɪk] Lock)</li>
+</ul>
+<p>对数据被外界修改保持保守态度，在整个数据处理过程中，数据处于锁定状态，依赖于数据库提供的锁机制。</p>
+<ul>
+<li>乐观锁(Optimistic[ˌɑ:ptɪˈmɪstɪk]Lock)</li>
+</ul>
+<p>采用宽松的加锁机制，基于数据版本记录机制，具体做法：数据库表增加一个”version”字段来实现，读取数据时，将版本号一同读出，之后更新，对版本号加1，将提交数据的版本数据与数据库对应记录的当前版本信息进行比对，如果提交的数据版本号大于数据库的数据，则予以更新，否则，被认为是过期数据。</p>
+<h2 id="几个概念"><a href="#几个概念" class="headerlink" title="几个概念"></a>几个概念</h2><h3 id="丢失更新"><a href="#丢失更新" class="headerlink" title="丢失更新"></a>丢失更新</h3><p>事务A和事务B，同时获得相同数据，然后在各自的事务中修改数据M，事务A先提交事务，数据M假如为M+，事务B后提交事务，数据M变成了M++，最终结果变成M++，覆盖了事务A的更新。</p>
+<p>例子：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">事务A</th>
+<th style="text-align:left">事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">读取X=100</td>
+<td style="text-align:left">读取X=100</td>
+</tr>
+<tr>
+<td style="text-align:left">写入X=X+100</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">事务结束X=200</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">写入X=X+100</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">事务结束X=300(事务A的更新丢失)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="脏读"><a href="#脏读" class="headerlink" title="脏读"></a>脏读</h3><p><strong>允许事务B可以读到事务A修改而未提交的数据</strong>，<strong>可能</strong>会造成了脏读(脏读本质就是无效的数据，只有当事务A回滚，那么事务B读到的数据才为无效的，所以这里只是<strong>可能</strong>造成脏读，当事务A不回滚的时候，事务B读到的数据就不为脏数据，也就是有效的数据，脏数据会导致以后的操作都会发生错误，一定要去避免，不能凭借侥幸，事务A不能百分之百保证不回滚，所以<strong>这种隔离级别很少用于实际应用</strong>，并且它的性能也不比其他级别好多少)。</p>
+<p>例子：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">事务A</th>
+<th style="text-align:left">事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">写入X=X+100(x=200)</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">读取X=200(无效数据，脏读)</td>
+</tr>
+<tr>
+<td style="text-align:left">事务回滚X=100</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">事务结束X=100</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">事务结束</td>
+</tr>
+</tbody>
+</table>
+<h3 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h3><p>不可重复读是指在一个事务范围中2次或者多次查询同一数据M返回了不同的数据，例如：事务B读取某一数据，事务A修改了该数据M并且提交，事务B又读取该数据M(可能是再次校验)，在同一个事务B中，读取同一个数据M的结果集不同，这个很蛋疼。</p>
+<p>例子：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">事务A</th>
+<th style="text-align:left">事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">读取X=100</td>
+<td style="text-align:left">读取X=100</td>
+</tr>
+<tr>
+<td style="text-align:left">写入X=X+100</td>
+<td style="text-align:left">读取X=100</td>
+</tr>
+<tr>
+<td style="text-align:left">事务结束，X=200</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">读取X=200(在一个事务B中读X的值发生了变化)</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">事务结束</td>
+</tr>
+</tbody>
+</table>
+<h3 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h3><p>当用户读取某一个范围的数据行时，另一个事务又在该范围内查询了新行，当用户再读取该范围的数据行时，会发现会有新的“幻影行”，例如：事务B读某一个数据M，事务A对数据M增加了一行并提交，事务B又读数据M，发生多出了一行造成的结果不一致(如果行数相同，则是不可重复读)。</p>
+<p>例子：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">事务A</th>
+<th style="text-align:left">事务B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">读取数据集M(3行)</td>
+</tr>
+<tr>
+<td style="text-align:left">在数据集M插入一行(4行)</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">事务结束</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">读取数据M(4行)</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">事务结束</td>
+</tr>
+</tbody>
+</table>
+<p>在事务B里，同一个数据集M，读到的条数不一致(新增，删除)。</p>
+<h2 id="封锁协议"><a href="#封锁协议" class="headerlink" title="封锁协议"></a>封锁协议</h2><p>在运用S锁和X锁对数据M加锁的时候，需要约定一些规则，例如何时申请S锁或者X锁，持锁时间，这些规则就是封锁协议。<br>其中不同的封锁协议对应不同的隔离级别。</p>
+<h3 id="一级封锁协议"><a href="#一级封锁协议" class="headerlink" title="一级封锁协议"></a>一级封锁协议</h3><p>一级封锁协议对应<strong>READ-UNCOMMITTED</strong> 隔离级别，本质是在事务A中修改完数据M后，立刻对这个数据M加上共享锁(S锁)[当事务A继续修改数据M的时候，先释放掉S锁，再修改数据，再加上S锁]，根据S锁的特性，事务B可以读到事务A修改后的数据(无论事务A是否提交，因为是共享锁，随时随地都能查到数据A修改后的结果)，事务B不能去修改数据M，直到事务A提交，释放掉S锁。</p>
+<p>缺点：<br><strong>可能</strong>会造成如下后果</p>
+<ol>
+<li>丢失更新。</li>
+<li>脏读。</li>
+<li>不可重复读。</li>
+<li>幻读。</li>
+</ol>
+<p>例子：<strong>MySql 5.5   证明一级封锁协议会造成脏读，不可重复读。</strong></p>
+<p> A客户端修改数据M，B客户端设置不同的隔离级别去查看数据M，论证该级别下会发生<strong>脏读</strong>，<strong>不可重复读</strong>(相当于客户端A修改的数据已经写到表里，客户端B传不同版本号[隔离级别]，去查看数据M，所得的查询结果也不同)。</p>
+<ol>
+<li>客户端A设置手动提交，并且开启事务A。<br><img src="http://static.mousycoder.com/16-2-18/64957505.jpg" alt=""></li>
+<li>客户端B设置手动提交，<strong>修改事务隔离级别为read-uncommitted，并且开启事务B(一定要在开启事务前修改事务的隔离级别，不然当前还是保持着原来的事务隔离级别，直到当前事务提交)</strong>。<br><img src="http://static.mousycoder.com/16-2-19/51402332.jpg" alt=""></li>
+<li>事务B查询数据M。<br><img src="http://static.mousycoder.com/16-2-19/31285715.jpg" alt=""></li>
+<li>事务A修改其中一行数据(查询原有基础数据，然后把id = 1 的name 修改为4 )。<br><img src="http://static.mousycoder.com/16-2-18/79244193.jpg" alt=""></li>
+<li>事务B查看数据M，发现事务B读到了事务A未提交的数据，发生了脏读。<br><img src="http://static.mousycoder.com/16-2-19/51987338.jpg" alt=""></li>
+<li>事务A回滚。<br><img src="http://static.mousycoder.com/16-2-18/75666180.jpg" alt=""></li>
+<li>客户端B查询的情况。<br><img src="http://static.mousycoder.com/16-2-18/84030903.jpg" alt=""></li>
+</ol>
+<p>在同一个事务B里，查询同一个数据M，居然2次不一样，造成不可重复读，其中有一次数据是无效的数据，脏读了。<br><strong>假如事务A不回滚呢？ 那么事务B就没造成脏读，不可重复读。</strong></p>
+<p>例子：<strong>MySql 5.5   证明一级封锁协议会造成更新丢失</strong></p>
+<ol>
+<li>事务A提交数据M。<br><img src="http://static.mousycoder.com/16-2-18/55662468.jpg" alt=""></li>
+<li>事务B查询数据M，事务B查询的数据M，没有脏数据，并且2次结果一致，没出现不可重复读。<br><img src="http://static.mousycoder.com/16-2-18/76935528.jpg" alt=""></li>
+<li>事务B修改数据M。<br><img src="http://static.mousycoder.com/16-2-19/24769346.jpg" alt=""></li>
+</ol>
+<p>此时事务A对数据M的修改被事务B给覆盖，造成了<strong>更新丢失</strong>。</p>
+<p>例子：<strong>MySql 5.5   证明一级封锁协议会造成幻读</strong></p>
+<ol>
+<li>客户端A设置手动提交，并且开启事务A。<br><img src="http://static.mousycoder.com/16-2-18/64957505.jpg" alt=""></li>
+<li>客户端B设置手动提交，<strong>修改事务隔离级别为read-uncommitted，并且开启事务B(一定要在开启事务前修改事务的隔离级别，不然当前还是保持着原来的事务隔离级别，直到当前事务提交)</strong>。<br><img src="http://static.mousycoder.com/16-2-19/51402332.jpg" alt=""></li>
+<li>事务B查询数据M。<br><img src="http://static.mousycoder.com/16-2-19/31285715.jpg" alt=""></li>
+<li>事务A插入一条数据。<br><img src="http://static.mousycoder.com/16-2-19/38096506.jpg" alt=""></li>
+<li>事务B查询数据M。<br><img src="http://static.mousycoder.com/16-2-19/4000898.jpg" alt=""><br>事务B第二次查询的时候，数据M多了一行，像是发生了幻觉似的，有可能这一行是无效数据(当事务A回滚)。</li>
+</ol>
+<h3 id="二级封锁协议"><a href="#二级封锁协议" class="headerlink" title="二级封锁协议"></a>二级封锁协议</h3><p>二级封锁协议对应<strong>READ-COMMITTED</strong>隔离级别，本质是事务A在修改数据M后立刻加X锁，事务B不能修改数据M，同时不能查询到最新的数据M(避免脏读)，查询到的数据M是上一个版本(Innodb MVCC快照)的。</p>
+<p>优点：<br>1.避免脏读。</p>
+<p>缺点：<br><strong>可能</strong>会造成如下后果</p>
+<ol>
+<li>丢失更新。</li>
+<li>不可重复读。</li>
+<li>幻读。</li>
+</ol>
+<p>例子：<strong>MySql 5.5    证明二级封锁协议不会造成脏读，但是会造成不可重复读</strong>(幻读，丢失更新，和上面证明方式一样，这里暂不证明了)<br> A客户端修改数据M，B客户端设置不同的隔离级别去查看数据M，论证该级别下会发生<strong>不可重复读</strong>(相当于客户端A修改的数据已经写到表里，客户端B传不同版本号[隔离级别]，去查看数据M，所得的查询结果也不同)。</p>
+<ol>
+<li>客户端A设置手动提交，并且开启事务A。<br><img src="http://static.mousycoder.com/16-2-18/64957505.jpg" alt=""></li>
+<li>客户端B设置手动提交，<strong>修改事务隔离级别为read-committed，并且开启事务B(一定要在开启事务前修改事务的隔离级别，不然当前还是保持着原来的事务隔离级别，直到当前事务提交)</strong>。<br><img src="http://static.mousycoder.com/16-2-19/76746572.jpg" alt=""></li>
+<li>事务A修改其中一行数据(查询原有基础数据，然后把id = 1 的name 修改为4 )。<br><img src="http://static.mousycoder.com/16-2-18/79244193.jpg" alt=""></li>
+<li>事务B查询数据M，数据还是和之前的一样(没有发生脏读)，事务B读不到了事务A未提交的数据。<br><img src="http://static.mousycoder.com/16-2-19/10054228.jpg" alt=""></li>
+<li>事务A提交。<br><img src="http://static.mousycoder.com/16-2-19/34152194.jpg" alt=""></li>
+<li>事务B查询数据，数据M被修改。<br><img src="http://static.mousycoder.com/16-2-19/58133194.jpg" alt=""></li>
+</ol>
+<p>在同一个事务B中，查询数据M，2次结果不一致，证明发生了不可重复读。</p>
+<h3 id="三级封锁协议"><a href="#三级封锁协议" class="headerlink" title="三级封锁协议"></a>三级封锁协议</h3><p>三级封锁协议对应<strong>REPEATABLE-READ</strong>隔离级别,本质是二级封锁协议基础上，对读到的数据M瞬间加上共享锁，直到事务结束才释放（保证了其他事务没办法修改该数据），这个级别是MySql 5.5 默认的隔离级别。</p>
+<p>优点：<br>1.避免脏读。<br>2.避免不可重复读。</p>
+<p>缺点：</p>
+<ol>
+<li>幻读。</li>
+<li>丢失更新。</li>
+</ol>
+<p>例子：<strong>MySql 5.5    证明三级封锁协议不会造成脏读，不可重复读</strong>(造成幻读，丢失更新，和上面证明方式一样，但是要在非mysql数据库上证明，后面有解释，这里暂不证明了)</p>
+<ol>
+<li>客户端A设置手动提交，并且开启事务A。<br><img src="http://static.mousycoder.com/16-2-18/64957505.jpg" alt=""></li>
+<li>客户端B设置手动提交，<strong>修改事务隔离级别为repeatable-read，并且开启事务B(一定要在开启事务前修改事务的隔离级别，不然当前还是保持着原来的事务隔离级别，直到当前事务提交)</strong>。<br><img src="http://static.mousycoder.com/16-2-19/8058034.jpg" alt=""></li>
+<li>事务A查询数据M。<br><img src="http://static.mousycoder.com/16-2-19/58578014.jpg" alt=""></li>
+<li>事务B查询数据M。<br><img src="http://static.mousycoder.com/16-2-19/31285715.jpg" alt=""></li>
+<li>事务A更新数据M。<br><img src="http://static.mousycoder.com/16-2-19/39415272.jpg" alt=""></li>
+<li>事务B查询数据M，发现查询的结果没变化，避免了脏读。<br><img src="http://static.mousycoder.com/16-2-19/16646481.jpg" alt=""></li>
+<li>事务A提交事务。<br><img src="http://static.mousycoder.com/16-2-19/79685446.jpg" alt=""></li>
+<li>事务B查询数据M，还是和之前查询的结果一样，没有变化，避免了<strong>不可重复读</strong>。<br><img src="http://static.mousycoder.com/16-2-19/78943312.jpg" alt=""></li>
+<li>事务B提交事务<br><img src="http://static.mousycoder.com/16-2-19/66424716.jpg" alt=""><br>这个时候事务B才能查询到最新的数据M+。</li>
+</ol>
+<p>例子：<strong>MySql 5.5    证明Mysql Innodb引擎的三级封锁协议不会造成幻读</strong></p>
+<p>mysql innodb的reapetable read级别是避免了幻读，<strong>mysql的实现和标准定义的RR隔离级别有差别</strong>，详情见 <a href="http://stackoverflow.com/questions/5444915/how-to-produce-phantom-reads" target="_blank" rel="external">how-to-produce-phantom-reads</a>。</p>
+<ol>
+<li>客户端A设置手动提交，并且开启事务A。<br><img src="http://static.mousycoder.com/16-2-18/64957505.jpg" alt=""></li>
+<li>客户端B设置手动提交，<strong>修改事务隔离级别为repeatable-read，并且开启事务B(一定要在开启事务前修改事务的隔离级别，不然当前还是保持着原来的事务隔离级别，直到当前事务提交)</strong>。<br><img src="http://static.mousycoder.com/16-2-19/8058034.jpg" alt=""></li>
+<li>事务A查询数据M。<br><img src="http://static.mousycoder.com/16-2-19/58578014.jpg" alt=""></li>
+<li>事务B查询数据M。<br><img src="http://static.mousycoder.com/16-2-19/31285715.jpg" alt=""></li>
+<li>事务A对记录M插入一条数据。<br><img src="http://static.mousycoder.com/16-2-19/19435945.jpg" alt=""></li>
+<li>事务A提交。<br><img src="http://static.mousycoder.com/16-2-19/28066126.jpg" alt=""></li>
+<li>事务B查看数据M。<br><img src="http://static.mousycoder.com/16-2-19/95060833.jpg" alt=""><br><strong>看不到事务A新增加的一条数据，说明避免了幻读。</strong></li>
+<li>事务B插入一条记录。<br><img src="http://static.mousycoder.com/16-2-19/52846863.jpg" alt=""><br>明明刚刚查询到没有ID为4的，现在居然插不进去，哈哈哈哈哈。</li>
+</ol>
+<p>例子：<strong>MySql 5.5    证明三级封锁协议在读到数据的瞬间加上共享锁，等事务结束才释放以及三级封锁协议会造成更新丢失</strong></p>
+<ol>
+<li>客户端A重新开启事务A。<br><img src="http://static.mousycoder.com/16-2-18/64957505.jpg" alt=""></li>
+<li>客户端B设置手动提交，<strong>修改事务隔离级别为read-committed，并且开启事务B(一定要在开启事务前修改事务的隔离级别，不然当前还是保持着原来的事务隔离级别，直到当前事务提交)</strong>。<br><img src="http://static.mousycoder.com/16-2-19/8058034.jpg" alt=""></li>
+<li>事务A修改数据M。<br><img src="http://static.mousycoder.com/16-2-19/41442542.jpg" alt=""></li>
+<li>事务B也修改数据M，<strong>事务B的修改进程被挂起，因为事务A在对数据M修改后瞬间加上了共享锁，对于其他事务只能读。</strong><br><img src="http://static.mousycoder.com/16-2-19/47195290.jpg" alt=""></li>
+<li>事务A提交事务。<br><img src="http://static.mousycoder.com/16-2-19/1217490.jpg" alt=""></li>
+<li>事务B的修改进程被唤起(等待4.98秒)。<br><img src="http://static.mousycoder.com/16-2-19/60770010.jpg" alt=""></li>
+<li>事务B提交修改。<br><img src="http://static.mousycoder.com/16-2-19/58525187.jpg" alt=""></li>
+<li>最终事务A，事务B查询数据M。<br><img src="http://static.mousycoder.com/16-2-19/35098107.jpg" alt=""><br>事务B的修改把事务A的修改给覆盖了，造成了更新丢失。</li>
+</ol>
+<h3 id="最强封锁协议"><a href="#最强封锁协议" class="headerlink" title="最强封锁协议"></a>最强封锁协议</h3><p>最强封锁协议对应Serialization隔离级别，本质是从MVCC并发控制退化到基于锁的并发控制，对事务中所有读取操作加S锁，写操作加X锁，这样可以避免脏读，不可重复读，幻读，更新丢失，开销也最大，会造成读写冲突，并发程度也最低。</p>
+<p>例子：<strong>MySql 5.5    证明三级封锁协议不会造成幻读</strong></p>
+<ol>
+<li>客户端A重新开启事务A<br><img src="http://static.mousycoder.com/16-2-18/64957505.jpg" alt=""></li>
+<li>客户端B设置手动提交，修改隔离级别为SERIALIZABLE，并且开启事务B。<br><img src="http://static.mousycoder.com/16-2-19/22943658.jpg" alt=""></li>
+<li>事务A插入数据，并且提交。<br><img src="http://static.mousycoder.com/16-2-19/2405821.jpg" alt=""></li>
+<li>事务B查询数据，依然还是之前的数据，避免的幻读。<br><img src="http://static.mousycoder.com/16-2-19/90514676.jpg" alt=""></li>
+<li>事务A修改数据，被挂起。<br><img src="http://static.mousycoder.com/16-2-19/38010863.jpg" alt=""></li>
+</ol>
+<p>证明了Serialization级别下写操作是对数据M加的是X锁。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>ANSI SQL 隔离级级别</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">隔离性</th>
+<th style="text-align:left">脏读可能性</th>
+<th style="text-align:left">不可重复读可能性</th>
+<th style="text-align:left">幻读可能性</th>
+<th style="text-align:left">加锁读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">READ-UNCOMMITTED</td>
+<td style="text-align:left">Y</td>
+<td style="text-align:left">Y</td>
+<td style="text-align:left">Y</td>
+<td style="text-align:left">N</td>
+</tr>
+<tr>
+<td style="text-align:left">READ-COMMITTED</td>
+<td style="text-align:left">N</td>
+<td style="text-align:left">Y</td>
+<td style="text-align:left">Y</td>
+<td style="text-align:left">N</td>
+</tr>
+<tr>
+<td style="text-align:left">REPEATABLE-READ</td>
+<td style="text-align:left">N</td>
+<td style="text-align:left">N</td>
+<td style="text-align:left">Y</td>
+<td style="text-align:left">N</td>
+</tr>
+<tr>
+<td style="text-align:left">SERIALIZABLE</td>
+<td style="text-align:left">N</td>
+<td style="text-align:left">N</td>
+<td style="text-align:left">N</td>
+<td style="text-align:left">Y</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><strong>您的鼓励是作者写作最大的动力！</strong></p>
+<p>如果您认为本站的文章质量不错，读后觉得收获很大，预期工资涨幅能超过30%，不妨小额赞助我一下，让我有动力继续写出高质量的教程。</p>
+<ul>
+<li>支付宝<br><img src="http://static.mousycoder.com/16-1-15/19697314.jpg" alt=""></li>
+<li>微信<br><img src="http://static.mousycoder.com/16-1-15/64333912.jpg" alt=""></li>
+</ul>
+<p>作 者 : <a href="http://weibo.com/mousycoder" target="_blank" rel="external">@mousycoder</a></p>
+<p>原文出处 : <a href="http://mousycoder.com/2016/02/19/explain-transaction-in-simple-language-3/">http://mousycoder.com/2016/02/19/explain-transaction-in-simple-language-3/</a></p>
+<p>创作时间：2016-2-19</p>
+<p>更新时间：2016-2-22</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/15/explain-transaction-in-simple-language-2/" rel="next" title="【深入浅出事务】（2）：Java的事务">
+                <i class="fa fa-chevron-left"></i> 【深入浅出事务】（2）：Java的事务
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/02/22/api-authentication/" rel="prev" title="API 客户端认证那些事">
+                API 客户端认证那些事 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/02/19/explain-transaction-in-simple-language-3/"
+           data-title="【深入浅出事务】（3）：事务的隔离级别（超详细）" data-url="http://mousycoder.com/2016/02/19/explain-transaction-in-simple-language-3/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/6722977?v=3&s=460"
+               alt="mousycoder" />
+          <p class="site-author-name" itemprop="name">mousycoder</p>
+          <p class="site-description motion-element" itemprop="description">虚心学习，乐于分享</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">51</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-douban"></i> DouBan
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/mousy_coder" target="_blank">
+                  
+                    <i class="fa fa-zhiHu"></i> ZhiHu
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">Links</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" target="_blank">MacTalk</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xiongyingqi.com/" target="_blank">熊瑛琪</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" target="_blank">何登成</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yuguo.us/" target="_blank">Yuguo</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ido321.com/" target="_blank">淡忘浅思</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://blog.jamespan.me/" target="_blank">潘家邦</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.webank.pw/" target="_blank">丁佳学</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/jiuyuehe/" target="_blank">肖敏</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cyblogs.com/" target="_blank">陈袁</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#本质"><span class="nav-number">1.</span> <span class="nav-text">本质</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁"><span class="nav-number">2.</span> <span class="nav-text">锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#从数据库系统角度"><span class="nav-number">2.1.</span> <span class="nav-text">从数据库系统角度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从程序员角度"><span class="nav-number">2.2.</span> <span class="nav-text">从程序员角度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#几个概念"><span class="nav-number">3.</span> <span class="nav-text">几个概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#丢失更新"><span class="nav-number">3.1.</span> <span class="nav-text">丢失更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脏读"><span class="nav-number">3.2.</span> <span class="nav-text">脏读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不可重复读"><span class="nav-number">3.3.</span> <span class="nav-text">不可重复读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#幻读"><span class="nav-number">3.4.</span> <span class="nav-text">幻读</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#封锁协议"><span class="nav-number">4.</span> <span class="nav-text">封锁协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一级封锁协议"><span class="nav-number">4.1.</span> <span class="nav-text">一级封锁协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二级封锁协议"><span class="nav-number">4.2.</span> <span class="nav-text">二级封锁协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三级封锁协议"><span class="nav-number">4.3.</span> <span class="nav-text">三级封锁协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最强封锁协议"><span class="nav-number">4.4.</span> <span class="nav-text">最强封锁协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mousycoder</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://weibo.com/mousycoder">mousycoder</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/mousycoder/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_pv">
+    总访问量：<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_uv">
+  访客数：<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"mousycoder"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

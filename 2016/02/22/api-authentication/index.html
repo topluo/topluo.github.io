@@ -1,0 +1,1001 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="极简小站,mousycoder" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="签名认证机制1.设置key密钥。2.假设参数 appid:wx930ea5d5a258f4f much_id:10000100 device_info:1000 body:test nonce_str:iabuaiVckJ按照参数名ASCII字典排序。StringA=”appid=wx930ea5d5a258f4f&amp;amp;body=test&amp;amp;device_info=1000&amp;amp;mu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="API 客户端认证那些事">
+<meta property="og:url" content="http://mousycoder.com/2016/02/22/api-authentication/index.html">
+<meta property="og:site_name" content="极简小站">
+<meta property="og:description" content="签名认证机制1.设置key密钥。2.假设参数 appid:wx930ea5d5a258f4f much_id:10000100 device_info:1000 body:test nonce_str:iabuaiVckJ按照参数名ASCII字典排序。StringA=”appid=wx930ea5d5a258f4f&amp;amp;body=test&amp;amp;device_info=1000&amp;amp;mu">
+<meta property="og:image" content="http://static.mousycoder.com/16-3-27/45176642.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-3-27/87300237.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-3-27/49047777.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-15/19697314.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-15/64333912.jpg">
+<meta property="og:updated_time" content="2016-04-20T11:53:02.476Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="API 客户端认证那些事">
+<meta name="twitter:description" content="签名认证机制1.设置key密钥。2.假设参数 appid:wx930ea5d5a258f4f much_id:10000100 device_info:1000 body:test nonce_str:iabuaiVckJ按照参数名ASCII字典排序。StringA=”appid=wx930ea5d5a258f4f&amp;amp;body=test&amp;amp;device_info=1000&amp;amp;mu">
+<meta name="twitter:image" content="http://static.mousycoder.com/16-3-27/45176642.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 12508341,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> API 客户端认证那些事 | 极简小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?16bedf24666607f78e3909b2d78ed8b2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="http://s6.cnzz.com/stat.php?id=1258224851&web_id=1258224851" type="text/javascript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">极简小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">一个分享技术干货的小清新网站</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project" rel="section">
+            
+              <i class="menu-item-icon fa fa-heart fa-fw"></i> <br />
+            
+            项目
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '2Lnpxp9f1uxjLcyTgoeg','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                API 客户端认证那些事
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-02-22T16:19:18+08:00" content="2016-02-22">
+              2016-02-22
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/总结/" itemprop="url" rel="index">
+                    <span itemprop="name">总结</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/22/api-authentication/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/22/api-authentication/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="签名认证机制"><a href="#签名认证机制" class="headerlink" title="签名认证机制"></a>签名认证机制</h2><p>1.设置key密钥。<br>2.假设参数 appid:wx930ea5d5a258f4f much_id:10000100 device_info:1000 body:test nonce_str:iabuaiVckJ按照参数名ASCII字典排序。<br>StringA=”appid=wx930ea5d5a258f4f&amp;body=test&amp;device_info=1000&amp;much_id=10000010&amp;nonce_str=iabuaiVckJ”;<br>3.拼接API密钥。<br>stringSignTemp=”stringA&amp;key=192006250b4c09247ec02edce69f6a2d”;sign=MD5(stringSignTemp).toUpperCase()=”9A0A8659F005D6984697E2CA0A9CF3B7”;</p>
+<a id="more"></a>
+<h2 id="HTTP证书认证"><a href="#HTTP证书认证" class="headerlink" title="HTTP证书认证"></a>HTTP证书认证</h2><p><img src="http://static.mousycoder.com/16-3-27/45176642.jpg" alt=""><br>HTTPS由HTTP+SSL组成，公钥私钥相当于钥匙和锁头，你可以把锁头给别人，别人可以用这个锁头把重要的东西锁起来，发给你，只有你有钥匙去打开锁看到里面的东西。</p>
+<ol>
+<li>客户端发起HTTPS请求。</li>
+<li>服务端配置。</li>
+<li>传送公钥。</li>
+<li>客户端解析证书，如果有异常，则弹出一个警告框，提示证书有问题，如果没有问题，则生成一个随机值(对称密钥)，用证书对随机值加密。</li>
+<li>传送加密信息，其实就是让服务器端得到这个随机值。</li>
+<li>服务器端用私钥解密，得到随机值，然后私钥对称加密。</li>
+<li>传输加密后的信息。</li>
+<li>客户端解密信息。客户端用私钥还原内容。</li>
+</ol>
+<p>总结：<br>服务器 用RSA生成公钥和私钥，把公钥放在证书里发送给客户端，私钥自己保存。<br>客户端首先向一个权威的服务器检查证书的合法性，如果证书合法，客户端产生一段随机数，这个随机数就作为通信的密钥，我们称之为对称密钥，用公钥加密这段随机数，然后发送到服务器，服务器用密钥解密获取对称密钥，然后，双方就已对称密钥进行加密解密通信了。</p>
+<h2 id="Oauth-2-0-认证"><a href="#Oauth-2-0-认证" class="headerlink" title="Oauth 2.0 认证"></a>Oauth 2.0 认证</h2><p>用户登录第三方网站，该网站又想获得另外一个服务商的信息(图片，文件)，但是服务商又不想提供用户名密码给第三方网站。</p>
+<p><img src="http://static.mousycoder.com/16-3-27/87300237.jpg" alt=""></p>
+<p><img src="http://static.mousycoder.com/16-3-27/49047777.jpg" alt=""></p>
+<ol>
+<li>第三方网站向服务商请求一个未授权的临时令牌code。</li>
+<li>服务商验证第三方网站的身份后，授予一个未授权的临时的令牌(大概10分钟)。</li>
+<li>第三方网站获得未授权的临时令牌后，将用户导向服务商的授权页面请求用户授权，将未授权的临时令牌和第三方网站的返回地址发给服务商。</li>
+<li>用户在服务商的授权页面输入自己的用户名和密码。</li>
+<li>授权成功后，服务商将用户导向第三方网站，并且返回已授权的临时令牌。</li>
+<li>第三方网站根据已授权的临时令牌从服务商那里获得具有访问权限的令牌accessToken。</li>
+<li>第三方网站使用获取到的访问令牌accseeToken可以访问服务商的用户资源。</li>
+</ol>
+<h2 id="授权模式"><a href="#授权模式" class="headerlink" title="授权模式"></a>授权模式</h2><ul>
+<li>授权码模式</li>
+<li>简化模式</li>
+<li>密码模式</li>
+<li>客户端模式</li>
+</ul>
+<h2 id="API接口频率限制"><a href="#API接口频率限制" class="headerlink" title="API接口频率限制"></a>API接口频率限制</h2><p>例子：<br>系统API接口日均调用次数预计1亿，提供5台服务器<br>单IP，单应用每小时调用次数不超过10000次<br>单应用，单用户，单接口每小时调用次数不超过1000次</p>
+<p>系统吞吐量(系统每秒能处理的请求数)</p>
+<p>80% <em> 1亿 / (24小时 </em> 60 分钟 <em> 60秒 </em> 40% * 5) = 4630tps<br>80%，40% 是指一天中有80%的请求发生在40%的时间里</p>
+<p><strong>简单设计</strong></p>
+<p>数据结构<br>k(app_id,ip) =&gt; v(count,startTime,lastTime)<br>k(app_id,uid,interface_id) =&gt; v(count,startTime,lastTime)</p>
+<p>startTime是第一次调用发生的时刻，lastTime是最近一次调用发生的时刻，精确到秒级。</p>
+<p>假设应用也有1万个，平均每个应用的用户数为10万个 ，接口数为50，独立访问IP地址为100万，那么数据项总和为：</p>
+<p>1万<em>100万 +1万</em>10万*50 = 600亿</p>
+<h2 id="接口安全"><a href="#接口安全" class="headerlink" title="接口安全"></a>接口安全</h2><ul>
+<li>注入攻击</li>
+<li>失效的身份和会话管理</li>
+<li>XSS</li>
+<li>不安全的直接对象引用<br>暴露一个文件，目录，数据密钥</li>
+<li>安全配置错误<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;security-constraint&gt;  &lt;http-<span class="function"><span class="keyword">method</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>http-method里的方法是要进行安全限制的，如果只写了POST,GET，那么黑客可以利用HEAD和PUT等其他方法进行攻击。</p>
+<ul>
+<li>敏感信息泄露<br>携程安全支付日志可遍历下载</li>
+<li>SQL注入<br>虾米网2013年</li>
+<li>功能级访问控制缺失</li>
+<li>跨站请求伪造(CSRF)<br>支付宝flash xss rookit攻击</li>
+<li>未授权访问/权限绕过<br>2014年搜狗后台管理系统</li>
+<li>账户体系控制不严/越权操作<br>乐视网 修改uid登录任意用户</li>
+<li>使用含有已知漏洞的组件</li>
+<li>未验证的重定向和转发</li>
+<li>引用不安全的第三方应用<br>结果：获取服务器敏感信息<br>淘宝网主站2014年4月，针对opnessl heartbeat，发送攻击数据包，不需要任何身份验证或者授权，可以从服务器内存读到最多64kb数据，这些数据包括用户登录的cookie,密码明文，可能泄露私钥。<br>方法：升级最新版本。</li>
+<li>系统错误/逻辑缺陷带来的暴力猜想<br>2013年京东商城，重置任意用户密码<br>弱口令猜想</li>
+<li>内部重要资料/文档外泄<br>淘宝往上传到百度网盘</li>
+</ul>
+<hr>
+<p><strong>您的鼓励是作者写作最大的动力！</strong></p>
+<p>如果您认为本站的文章质量不错，读后觉得收获很大，预期工资涨幅能超过30%，不妨小额赞助我一下，让我有动力继续写出高质量的教程。</p>
+<ul>
+<li>支付宝<br><img src="http://static.mousycoder.com/16-1-15/19697314.jpg" alt=""></li>
+<li>微信<br><img src="http://static.mousycoder.com/16-1-15/64333912.jpg" alt=""></li>
+</ul>
+<p>作 者 : <a href="http://weibo.com/mousycoder" target="_blank" rel="external">@mousycoder</a></p>
+<p>原文出处 : <a href="http://mousycoder.com/2016/02/22/api-authentication/">http://mousycoder.com/2016/02/22/api-authentication/</a></p>
+<p>创作时间：2016-2-22</p>
+<p>更新时间：2016-2-22</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/19/explain-transaction-in-simple-language-3/" rel="next" title="【深入浅出事务】（3）：事务的隔离级别（超详细）">
+                <i class="fa fa-chevron-left"></i> 【深入浅出事务】（3）：事务的隔离级别（超详细）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/27/this-year-of-weitoo/" rel="prev" title="微兔这一年">
+                微兔这一年 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/02/22/api-authentication/"
+           data-title="API 客户端认证那些事" data-url="http://mousycoder.com/2016/02/22/api-authentication/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/6722977?v=3&s=460"
+               alt="mousycoder" />
+          <p class="site-author-name" itemprop="name">mousycoder</p>
+          <p class="site-description motion-element" itemprop="description">虚心学习，乐于分享</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">51</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-douban"></i> DouBan
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/mousy_coder" target="_blank">
+                  
+                    <i class="fa fa-zhiHu"></i> ZhiHu
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">Links</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" target="_blank">MacTalk</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xiongyingqi.com/" target="_blank">熊瑛琪</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" target="_blank">何登成</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yuguo.us/" target="_blank">Yuguo</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ido321.com/" target="_blank">淡忘浅思</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://blog.jamespan.me/" target="_blank">潘家邦</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.webank.pw/" target="_blank">丁佳学</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/jiuyuehe/" target="_blank">肖敏</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cyblogs.com/" target="_blank">陈袁</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#签名认证机制"><span class="nav-number">1.</span> <span class="nav-text">签名认证机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP证书认证"><span class="nav-number">2.</span> <span class="nav-text">HTTP证书认证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Oauth-2-0-认证"><span class="nav-number">3.</span> <span class="nav-text">Oauth 2.0 认证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#授权模式"><span class="nav-number">4.</span> <span class="nav-text">授权模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API接口频率限制"><span class="nav-number">5.</span> <span class="nav-text">API接口频率限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口安全"><span class="nav-number">6.</span> <span class="nav-text">接口安全</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mousycoder</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://weibo.com/mousycoder">mousycoder</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/mousycoder/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_pv">
+    总访问量：<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_uv">
+  访客数：<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"mousycoder"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

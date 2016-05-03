@@ -1,0 +1,1006 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="VisualVm," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="今天情人节，coder君与LP分隔两地，闲着无聊，开始继续写vvm教程，那些单身狗们，记得找coder君领狗粮哦 = |=
+有时候好好的程序放到生产服务器上一段时间后，就会发现服务器响应缓慢，进而进一步发现是cpu过高，于是就慌了，造成cpu过高的原因很多，不过大多是由于资源吃紧造成，例如：sql执行过慢，程序里存在死循环，数据库连接未释放，网络阻塞导致的第三方框架代码出现死循环，大量的操作导致死">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【VisualVM 简明教程】（4）： 分析CPU">
+<meta property="og:url" content="http://mousycoder.com/2016/02/14/simple-tutorial-of-visualvm-4/index.html">
+<meta property="og:site_name" content="极简小站">
+<meta property="og:description" content="今天情人节，coder君与LP分隔两地，闲着无聊，开始继续写vvm教程，那些单身狗们，记得找coder君领狗粮哦 = |=
+有时候好好的程序放到生产服务器上一段时间后，就会发现服务器响应缓慢，进而进一步发现是cpu过高，于是就慌了，造成cpu过高的原因很多，不过大多是由于资源吃紧造成，例如：sql执行过慢，程序里存在死循环，数据库连接未释放，网络阻塞导致的第三方框架代码出现死循环，大量的操作导致死">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-15/82910473.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-15/16027123.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-15/85579448.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-15/53593378.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-15/17442236.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-21/74442531.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-21/79771090.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-21/69254465.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-21/51881586.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-21/61855377.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-21/63355558.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-22/50578834.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-21/39509688.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-21/35684758.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-15/19697314.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-15/64333912.jpg">
+<meta property="og:updated_time" content="2016-04-20T11:53:02.480Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【VisualVM 简明教程】（4）： 分析CPU">
+<meta name="twitter:description" content="今天情人节，coder君与LP分隔两地，闲着无聊，开始继续写vvm教程，那些单身狗们，记得找coder君领狗粮哦 = |=
+有时候好好的程序放到生产服务器上一段时间后，就会发现服务器响应缓慢，进而进一步发现是cpu过高，于是就慌了，造成cpu过高的原因很多，不过大多是由于资源吃紧造成，例如：sql执行过慢，程序里存在死循环，数据库连接未释放，网络阻塞导致的第三方框架代码出现死循环，大量的操作导致死">
+<meta name="twitter:image" content="http://static.mousycoder.com/16-1-15/82910473.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 12508341,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 【VisualVM 简明教程】（4）： 分析CPU | 极简小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?16bedf24666607f78e3909b2d78ed8b2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="http://s6.cnzz.com/stat.php?id=1258224851&web_id=1258224851" type="text/javascript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">极简小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">一个分享技术干货的小清新网站</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project" rel="section">
+            
+              <i class="menu-item-icon fa fa-heart fa-fw"></i> <br />
+            
+            项目
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '2Lnpxp9f1uxjLcyTgoeg','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                【VisualVM 简明教程】（4）： 分析CPU
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-02-14T16:02:14+08:00" content="2016-02-14">
+              2016-02-14
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/教程/" itemprop="url" rel="index">
+                    <span itemprop="name">教程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/14/simple-tutorial-of-visualvm-4/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/14/simple-tutorial-of-visualvm-4/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天情人节，coder君与LP分隔两地，闲着无聊，开始继续写vvm教程，那些单身狗们，记得找coder君领狗粮哦 = |=</p>
+<p>有时候好好的程序放到生产服务器上一段时间后，就会发现服务器响应缓慢，进而进一步发现是cpu过高，于是就慌了，造成cpu过高的原因很多，不过大多是由于资源吃紧造成，例如：sql执行过慢，程序里存在死循环，数据库连接未释放，网络阻塞导致的第三方框架代码出现死循环，大量的操作导致死锁等,遇到此类问题不必紧张,coder君手把手教你克服心理障碍。</p>
+<a id="more"></a>
+<h2 id="案例：死循环造成CPU过高"><a href="#案例：死循环造成CPU过高" class="headerlink" title="案例：死循环造成CPU过高"></a>案例：死循环造成CPU过高</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CpuTest</span> &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) throws InterruptedException </span>&#123;</span><br><span class="line">        loop();</span><br><span class="line">        endlessLoop();</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">endlessLoop</span>(<span class="params"></span>) throws InterruptedException </span>&#123;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            System.<span class="keyword">out</span>.println(<span class="string">"hello world! loop!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">loop</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">            System.<span class="keyword">out</span>.println(<span class="string">"hello world! endless loop!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 分析点击抽样器-&gt;CPU-&gt;查看CPU样例，发现endlessLoop()方法最耗CPU(这里有2个方法 loop和endlessLoop)<br><img src="http://static.mousycoder.com/16-1-15/82910473.jpg" alt=""></p>
+<p>查看线程cpu耗时，发现main线程最耗时，点击增量，可以从此刻观察，cpu耗时的增长速率<br><img src="http://static.mousycoder.com/16-1-15/16027123.jpg" alt=""></p>
+<p>查看线程dump,主要观察main线程，发现main线程当前状态下一直在执行<code>CpuTest.endlessLoop(CpuTest.java:14)</code>,这里可以定位问题位置，同时细心的童鞋可以观察看后面执行System.out.println(“”);方法是要先加锁的。<br><img src="http://static.mousycoder.com/16-1-15/85579448.jpg" alt=""></p>
+<p>截图一段，我生产服务器(tomcat+springmvc)main线程的情况,其实只想说明web项目启动的main方法在中间件里。<br><img src="http://static.mousycoder.com/16-1-15/53593378.jpg" alt=""></p>
+<p><img src="http://static.mousycoder.com/16-1-15/17442236.jpg" alt=""></p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>VisualVm只能定位JVM的cpu情况，但是生产主机上不光是Java程序，这时我们要采取另外的方案。</p>
+<p>1.看监控数据是否正常，cpu,mem。</p>
+<p><img src="http://static.mousycoder.com/16-1-21/74442531.jpg" alt=""></p>
+<p><img src="http://static.mousycoder.com/16-1-21/79771090.jpg" alt=""></p>
+<p>CPU占用1.5左右(100-98.0id) 内存占用50%(435/100*100%=43.5%) 阿里云监控内存大小转成实际占用内存大小，类似windows ,平均负载 0.1 差不多，其他几个参数，这里暂不介绍。</p>
+<p>2.假设异常，找到异常的PID。</p>
+<p>这里推荐<code>htop</code>(清晰进程，线程，<strong>命令行</strong>，排序支持鼠标双击，过滤，kill程序，标记某个线程或者进程,安装<code>apt-get install htop</code>)<br><img src="http://static.mousycoder.com/16-1-21/69254465.jpg" alt=""></p>
+<p>如果你没有服务器上安装软件的权限的话，就老老实实用<code>top</code>。通过<code>top</code>命令(默认3秒刷新，回车空格手动刷新，<code>top -d 5</code> 5秒刷新，也可以进入top后输入<code>d</code>设置刷新时间，<code>top -p 4360</code> 监控指定进程)，然后按X ，默认按照CPU%排序，查看系统运行情况，如果想强制按CPU 降序，则输入大写P，如果强制按内存降序，则输入大写M(top命令是交互式的)。<br><img src="http://static.mousycoder.com/16-1-21/51881586.jpg" alt=""></p>
+<p><strong>解读</strong>：<br>1).现在系统时间 10:18.44 ，系统一直运行了 131天16小时51分，当前有1个用户登录系统(相同账号也算不同用户)，平均负载分别为0.00,0.01,0.05(分别为1分钟，5分钟，15分钟的负载情况，load average是每隔5秒钟检查一次活跃的进程数，用特定的算法得到的数值，然后除以逻辑CPU数量，如果负载持续大于cpu个数，则表明负载过高) 。大概可以看出系统负载很低，运行状态健康。</p>
+<p>2).当前一共有103个<strong>进程</strong>，处于运行的有2个，处于休眠状态的有101个，处于停止状态的有0个，处于僵尸状态的有0个。大概可以看出系统进程总数较少，环境比较单纯，运行中的进程不多。</p>
+<p>3).<code>0.3 us</code> 用户空间占用CPU 0.3%,<code>0.7 sy</code>内核占用CPU 0.7%，<code>0.0 ni</code>改变过优先级的进程占用CPU的百分比，<code>98.0 id</code><strong>空闲CPU的百分比为98.0</strong>,<code>0.3 wa</code>IO等待所占用CPU的百分比为0.3，<code>0.3 hi</code>硬中断(Hardware IRQ)占用CPU的百分比为0.3(外设给CPU的异步信号(中断),例如：网卡收到数据包),<code>0.0 si</code>软中断占用cpu的百分比为0(软件本身给操作系统内核的中断信号，通常由硬中断处理程序对操作系统内核的中断)，<code>0.3 st</code> 虚拟机被hypervisor偷去CPU的时间。</p>
+<p>4).<code>KiB Mem</code> 代表内存占用，<code>1016272 total</code> 内存总的大小1g(以kb为单位)，<strong><code>941492 used</code> 使用中的内存总量为0.9g，<code>74780 free</code>空闲内存总量为74m(吓一跳吧，才74M，这个不是实际剩余的内内存大小)</strong>，<code>115900 buffers</code>缓存的内存量为115m，<code>389836 cached</code> cached大小380M。空闲内存总量只有74m，如果是windows去理解的话，此台服务器已经快挂了，实际内存大小等于74M+ buffers+cached = 580m(哈哈，够用，才占用一半呢), linux的内存管理和windows是不一样的，Linux会借用空闲的内存当作磁盘缓存， 磁盘数据缓存会让linux运行的更快，它永远不会从程序中拿出内存，它没有任何缺点，只是会混淆新手，如果你的应用程序需要更多的内存，他们会回收一部分用作磁盘数据缓存的物理内存，返回给应用程序，这个过程不需要启动交换，磁盘缓存(Disk caching)是不能禁用的，   但是可以释放磁盘缓存 1).只释放pagecache(文件缓存) <code>echo 1 &gt; /proc/sys/vm/drop_caches</code>  2).释放dentries和inodes <code>echo 2 &gt; /proc/sys/vm/drop_caches</code> 3).释放pagecache，dentries和inodes <code>echo 3 &gt; /proc/sys/vm/drop_caches</code><br>具体原理可以查看<a href="http://www.linuxatemyram.com/" target="_blank" rel="external">linuxatemyram</a></p>
+<p><strong>我们利用<code>free</code> 进一步证实上面的内容</strong></p>
+<p><img src="http://static.mousycoder.com/16-1-21/61855377.jpg" alt=""><br>1).shared代表被线程共享的内存大小(大多数已经舍弃掉),buffer用来给块设备做缓存(记录文件系统的metadata和tracking in flight pages),cache缓存文件(第二次打开就很快)，linux系统cached比较大，cached大小390m,buffers为110m。</p>
+<p>2).435288代表 -buffers/cache (<strong>应用程序实际使用330m内存</strong>)  580984 代表 +buffers/cache(<strong>实际剩余内存大小580m</strong>)。</p>
+<p>3).重要等式 <code>total = used + free</code>   <code>used(-buffers/cache) = used(Mem)-buffers(Mem)-cached(Mem)</code>  <code>free(+buffers/cache) = free(Mem) + buffers(Mem) +cached(Mem)</code> 。</p>
+<p>4).<code>free</code>命令的值是从 /proc/meminfo 文件里读到的。</p>
+<p>5).Swap 交换区 总共大小 0 kb,已经使用0kb,释放了0Kb，<strong>如果swap used &gt; 0,则可以说明系统内存瓶颈了</strong>。</p>
+<p>6).内存总和 <code>free -t</code> 总和等于total(Mem) + total(Swap)。</p>
+<p>7).一般常用命令 <code>free -s 3</code> 每3秒观察一次内存使用情况。</p>
+<p>占用cpu最高的进程是java，PID为28628，USER进程所有者root,PR优先级20，NI为0(负值优先级高，正值优先级低,PR=NI+20) ,VIRT进程使用虚拟内存1G(java进程最高只能占用到1G)，RES进程实际使用的物理内存270M(不包含swap和shared),SHR共享内存大小5M，S进程状态随眠状态(S睡眠，R运行，T停止或被跟踪，Z僵尸，D不可中断睡眠态)，%CPU占用CPU 0.7%，%MEM占用内存27%，TIME+进程使用cpu的时间54分40.12秒。总体看java进程运行良好。</p>
+<p>3.这里假设PID为16368的<strong>进程</strong>占用CPU比较高(因为做了多次实验，所以PID没办法和上面的28628保持一致)，<br>先用<code>ps -ef | grep java</code>,也可以用<code>htop</code> filter java，也可以<code>jps -v</code> 找到 java的进程ID 16368(只能查看当前用户的java pid,不太建议使用，-v显示详细信息，也可以不加)<br><img src="http://static.mousycoder.com/16-1-21/63355558.jpg" alt=""><br><img src="http://static.mousycoder.com/16-1-22/50578834.jpg" alt=""><br>？代表终端设备未知，Sl代表休眠状态多线程</p>
+<p>Linux通过进程查看线程的方法  1).<code>htop</code>按t(显示进程线程嵌套关系)和H(显示线程) ，然后F4过滤进程名。2).<code>ps -eLf | grep java</code>(快照，带线程命令，e是显示全部进程，L是显示线程，f全格式输出) 3).<code>pstree -p &lt;pid&gt;</code>(显示进程树，不加pid显示所有) 4).<code>top -Hp &lt;pid&gt;</code> (实时) 5).<code>ps -T -p &lt;pid&gt;</code>(快照) <strong>推荐程度按数字从小到大</strong>。</p>
+<p><img src="http://static.mousycoder.com/16-1-21/39509688.jpg" alt=""></p>
+<p>4.利用<code>jstack 16368 &gt; 2016-1-21.tdump</code> (jstack是jdk自带的生成java stack和native stack的工具) 把threaddump输出到文件里,这里假设PID为16369(一般比进程号+1的是main线程，如果存在main线程貌似最先分配)的线程占用CPU最高，将其ID转成16进制0x3ff1(使用命令 <code>printf &quot;%x\n&quot; 16369</code> 输出3ff1)。</p>
+<p>5.搜索threaddump文件，nid= 0x3ff1的线程堆栈，通过堆栈信息，就可以定位到占用CPU最高的代码地方(这里是正常的)。<br><img src="http://static.mousycoder.com/16-1-21/35684758.jpg" alt=""></p>
+<p>好啦，CPU冲高问题排查完毕，有了这样的知识体系，以后完全可以举一反三，coder君同时附上其他常用配合命令。</p>
+<ul>
+<li><p>每隔一秒显示新生代，老年代，持久代垃圾回收情况<br><code>jstat -gcutil 16368  1000ms</code> 参考<code>jstat -help</code>，也可以查看远程主机的GC情况，需要远程主机开启jstatd服务。</p>
+</li>
+<li><p>观察堆内存情况<br><code>jmap -dump:format=b,file=2016-1-21.mdump 16368</code> 生成堆dump,放到mat或者vvm进行分析，上篇分析OOM有讲到。 </p>
+</li>
+<li><p>查看jvm系统参数<br><code>jinfo 16368</code></p>
+</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="http://www.cnblogs.com/wade-xu/p/4369094.html" target="_blank" rel="external">性能分析神器VisualVM</a></li>
+<li><a href="http://blog.csdn.net/fenglibing/article/details/6411969" target="_blank" rel="external">vvm命令</a></li>
+</ul>
+<hr>
+<p>感谢您的耐心阅读，如果您发现文章中有一些没表述清楚的，或者是不对的地方，请给我留言，你的鼓励是作者写作最大的动力，<br>如果您认为本文质量不错，读后觉得收获很大，不妨小额赞助我一下，让我更有动力继续写出高质量的文章。</p>
+<ul>
+<li>支付宝<br><img src="http://static.mousycoder.com/16-1-15/19697314.jpg" alt=""></li>
+<li>微信<br><img src="http://static.mousycoder.com/16-1-15/64333912.jpg" alt=""></li>
+</ul>
+<p>作 者 : <a href="http://weibo.com/mousycoder" target="_blank" rel="external">@mousycoder</a></p>
+<p>原文出处 : <a href="http://mousycoder.com/2016/02/14/simple-tutorial-of-visualvm-4/">http://mousycoder.com/2016/02/14/simple-tutorial-of-visualvm-4/</a></p>
+<p>创作时间：2016-2-14</p>
+<p>更新时间：2016-2-14</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/VisualVm/" rel="tag">#VisualVm</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/01/15/simple-tutorial-of-visualvm-3/" rel="next" title="【VisualVM 简明教程】（3）：分析PermGenOOM">
+                <i class="fa fa-chevron-left"></i> 【VisualVM 简明教程】（3）：分析PermGenOOM
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/02/15/simple-tutorial-of-visualvm-5/" rel="prev" title="【VisualVM 简明教程】（5）： 分析线程">
+                【VisualVM 简明教程】（5）： 分析线程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/02/14/simple-tutorial-of-visualvm-4/"
+           data-title="【VisualVM 简明教程】（4）： 分析CPU" data-url="http://mousycoder.com/2016/02/14/simple-tutorial-of-visualvm-4/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/6722977?v=3&s=460"
+               alt="mousycoder" />
+          <p class="site-author-name" itemprop="name">mousycoder</p>
+          <p class="site-description motion-element" itemprop="description">虚心学习，乐于分享</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">51</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-douban"></i> DouBan
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/mousy_coder" target="_blank">
+                  
+                    <i class="fa fa-zhiHu"></i> ZhiHu
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">Links</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" target="_blank">MacTalk</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xiongyingqi.com/" target="_blank">熊瑛琪</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" target="_blank">何登成</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yuguo.us/" target="_blank">Yuguo</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ido321.com/" target="_blank">淡忘浅思</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://blog.jamespan.me/" target="_blank">潘家邦</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.webank.pw/" target="_blank">丁佳学</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/jiuyuehe/" target="_blank">肖敏</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cyblogs.com/" target="_blank">陈袁</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#案例：死循环造成CPU过高"><span class="nav-number">1.</span> <span class="nav-text">案例：死循环造成CPU过高</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#补充"><span class="nav-number">2.</span> <span class="nav-text">补充</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mousycoder</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://weibo.com/mousycoder">mousycoder</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/mousycoder/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_pv">
+    总访问量：<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_uv">
+  访客数：<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"mousycoder"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

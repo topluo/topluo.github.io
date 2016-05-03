@@ -1,0 +1,983 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="lamp,ubuntu," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="配置安装源编辑sources.list文件，替换一下更新源，这里用阿里云的更新源vim /etc/apt/sources.list
+阿里云更新源">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在ubuntu14.04上安装lamp环境">
+<meta property="og:url" content="http://mousycoder.com/2015/11/25/install-lamp-environment-on-ubuntu14-04/index.html">
+<meta property="og:site_name" content="极简小站">
+<meta property="og:description" content="配置安装源编辑sources.list文件，替换一下更新源，这里用阿里云的更新源vim /etc/apt/sources.list
+阿里云更新源">
+<meta property="og:image" content="http://static.mousycoder.com/15-11-25/28406513.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/15-11-25/13970942.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/15-11-25/81627900.jpg">
+<meta property="og:updated_time" content="2016-04-20T11:53:02.478Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在ubuntu14.04上安装lamp环境">
+<meta name="twitter:description" content="配置安装源编辑sources.list文件，替换一下更新源，这里用阿里云的更新源vim /etc/apt/sources.list
+阿里云更新源">
+<meta name="twitter:image" content="http://static.mousycoder.com/15-11-25/28406513.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 12508341,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 在ubuntu14.04上安装lamp环境 | 极简小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?16bedf24666607f78e3909b2d78ed8b2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="http://s6.cnzz.com/stat.php?id=1258224851&web_id=1258224851" type="text/javascript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">极简小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">一个分享技术干货的小清新网站</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project" rel="section">
+            
+              <i class="menu-item-icon fa fa-heart fa-fw"></i> <br />
+            
+            项目
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '2Lnpxp9f1uxjLcyTgoeg','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                在ubuntu14.04上安装lamp环境
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-11-25T13:25:04+08:00" content="2015-11-25">
+              2015-11-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/总结/" itemprop="url" rel="index">
+                    <span itemprop="name">总结</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/11/25/install-lamp-environment-on-ubuntu14-04/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/25/install-lamp-environment-on-ubuntu14-04/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="配置安装源"><a href="#配置安装源" class="headerlink" title="配置安装源"></a>配置安装源</h2><p>编辑sources.list文件，替换一下更新源，这里用阿里云的更新源<br><code>vim /etc/apt/sources.list</code></p>
+<p>阿里云更新源</p>
+<a id="more"></a>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse</span></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse</span></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse</span></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse</span></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse</span></span><br><span class="line"></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//mirrors.aliyuncs.com/ubuntu/ trusty main restricted universe multiverse</span></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//mirrors.aliyuncs.com/ubuntu/ trusty-security main restricted universe multiverse</span></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//mirrors.aliyuncs.com/ubuntu/ trusty-updates main restricted universe multiverse</span></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//mirrors.aliyuncs.com/ubuntu/ trusty-proposed main restricted universe multiverse</span></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//mirrors.aliyuncs.com/ubuntu/ trusty-backports main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//mirrors.aliyuncs.com/ubuntu/ trusty main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//mirrors.aliyuncs.com/ubuntu/ trusty-security main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//mirrors.aliyuncs.com/ubuntu/ trusty-updates main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//mirrors.aliyuncs.com/ubuntu/ trusty-proposed main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//mirrors.aliyuncs.com/ubuntu/ trusty-backports main restricted universe multiverse</span></span><br></pre></td></tr></table></figure>
+<p>中科大更新源</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">deb <span class="string">http:</span><span class="comment">//debian.ustc.edu.cn/ubuntu/ trusty main restricted universe multiverse</span></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//debian.ustc.edu.cn/ubuntu/ trusty-security main restricted universe multiverse</span></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//debian.ustc.edu.cn/ubuntu/ trusty-updates main restricted universe multiverse</span></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//debian.ustc.edu.cn/ubuntu/ trusty-proposed main restricted universe multiverse</span></span><br><span class="line">deb <span class="string">http:</span><span class="comment">//debian.ustc.edu.cn/ubuntu/ trusty-backports main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//debian.ustc.edu.cn/ubuntu/ trusty main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//debian.ustc.edu.cn/ubuntu/ trusty-security main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//debian.ustc.edu.cn/ubuntu/ trusty-updates main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//debian.ustc.edu.cn/ubuntu/ trusty-proposed main restricted universe multiverse</span></span><br><span class="line">deb-src <span class="string">http:</span><span class="comment">//debian.ustc.edu.cn/ubuntu/ trusty-backports main restricted universe multiverse</span></span><br></pre></td></tr></table></figure>
+<p>更新</p>
+<p><code>apt-get update</code></p>
+<h2 id="安装Mysql"><a href="#安装Mysql" class="headerlink" title="安装Mysql"></a>安装Mysql</h2><p><code>apt-get install mysql-server mysql-client</code></p>
+<p>查看Myql默认密码</p>
+<p><code>vim /etc/mysql/debian.cnf</code></p>
+<p>用默认密码进入mysql,修改Mysql默认密码</p>
+<p><code>set password for &#39;root&#39;@&#39;localhost&#39; = password(&#39;yourpass&#39;)</code></p>
+<p>允许myysql外部链接</p>
+<p>修改 /etc/mysql/my.cnf，注释掉bind-address = 127.0.0.0</p>
+<h2 id="安装Apache"><a href="#安装Apache" class="headerlink" title="安装Apache"></a>安装Apache</h2><p><code>apt-get install apache2</code></p>
+<p>默认网站目录 /var/www/html </p>
+<p>修改默认网站目录 </p>
+<p><code>/etc/apache2/sites-available/000-default.conf</code> 把DocumentRoot换成自己想指定的目录</p>
+<p>其中如果要绑定域名的话 修改<code>ServerName XX.COM</code></p>
+<h2 id="安装PHP"><a href="#安装PHP" class="headerlink" title="安装PHP"></a>安装PHP</h2><p><code>-get install php5 libapache2-mod-php5</code></p>
+<p>重启apache2 </p>
+<p><code>service apache2 restart</code></p>
+<h2 id="测试-PHP，建立一个探针文件"><a href="#测试-PHP，建立一个探针文件" class="headerlink" title="测试 PHP，建立一个探针文件"></a>测试 PHP，建立一个探针文件</h2><p><code>vi /var/www/html/info.php</code></p>
+<p>内容<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?php</span></span><br><span class="line">phpinfo()</span><br><span class="line"><span class="meta">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>打开 localhost/info.php 可以看到</p>
+<p><img src="http://static.mousycoder.com/15-11-25/28406513.jpg" alt=""></p>
+<h2 id="让PHP5支持MySql"><a href="#让PHP5支持MySql" class="headerlink" title="让PHP5支持MySql"></a>让PHP5支持MySql</h2><p><code>apt-cache search php5
+apt-get install php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl</code></p>
+<p>重启apache2 </p>
+<p><code>service apache2 restart</code></p>
+<h2 id="安装-XCache-优化缓存"><a href="#安装-XCache-优化缓存" class="headerlink" title="安装 XCache 优化缓存"></a>安装 XCache 优化缓存</h2><p><code>apt-get install php5-xcache</code></p>
+<p>重启apache2 </p>
+<p><code>service apache2 restart</code></p>
+<h2 id="安装phpmyadmin管理Mysql"><a href="#安装phpmyadmin管理Mysql" class="headerlink" title="安装phpmyadmin管理Mysql"></a>安装phpmyadmin管理Mysql</h2><p><code>apt-get install phpmyadmin</code></p>
+<p><img src="http://static.mousycoder.com/15-11-25/13970942.jpg" alt=""><br><img src="http://static.mousycoder.com/15-11-25/81627900.jpg" alt=""></p>
+<p>要求输入Myql的用户名和密码。</p>
+<p>如果此步跳过，以后想重新配置</p>
+<p><code>dpkg-reconfigure phpmyadmin</code></p>
+<p>phpmyadmin在/usr/share/phpmyadmin目录，所以就用命令：<code>ln -s /usr/share/phpmyadmin /var/www</code> 建立软连接。</p>
+<p>phpadmin地址：localhost/phpmyyyadmin/index.php</p>
+<hr>
+<p>感谢您的耐心阅读，如果您发现文章中有一些没表述清楚的，或者是不对的地方，请给我留言，你的鼓励是作者写作最大的动力，</p>
+<p>作 者 : <a href="http://weibo.com/mousycoder" target="_blank" rel="external">@mousycoder</a></p>
+<p>原文出处 : <a href="http://mousycoder.com/2015/11/25/install-lamp-environment-on-ubuntu14-04/">http://mousycoder.com/2015/11/25/install-lamp-environment-on-ubuntu14-04/</a></p>
+<p>创作时间：2015-11-25</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/lamp/" rel="tag">#lamp</a>
+          
+            <a href="/tags/ubuntu/" rel="tag">#ubuntu</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/19/classic-tutorial-of-hexo-blog/" rel="next" title="「搭建Hexo博客」简明教程">
+                <i class="fa fa-chevron-left"></i> 「搭建Hexo博客」简明教程
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/31/2015-year-end-summary/" rel="prev" title="2015年终总结">
+                2015年终总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/11/25/install-lamp-environment-on-ubuntu14-04/"
+           data-title="在ubuntu14.04上安装lamp环境" data-url="http://mousycoder.com/2015/11/25/install-lamp-environment-on-ubuntu14-04/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/6722977?v=3&s=460"
+               alt="mousycoder" />
+          <p class="site-author-name" itemprop="name">mousycoder</p>
+          <p class="site-description motion-element" itemprop="description">虚心学习，乐于分享</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">51</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-douban"></i> DouBan
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/mousy_coder" target="_blank">
+                  
+                    <i class="fa fa-zhiHu"></i> ZhiHu
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">Links</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" target="_blank">MacTalk</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xiongyingqi.com/" target="_blank">熊瑛琪</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" target="_blank">何登成</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yuguo.us/" target="_blank">Yuguo</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ido321.com/" target="_blank">淡忘浅思</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://blog.jamespan.me/" target="_blank">潘家邦</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.webank.pw/" target="_blank">丁佳学</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/jiuyuehe/" target="_blank">肖敏</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cyblogs.com/" target="_blank">陈袁</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置安装源"><span class="nav-number">1.</span> <span class="nav-text">配置安装源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Mysql"><span class="nav-number">2.</span> <span class="nav-text">安装Mysql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Apache"><span class="nav-number">3.</span> <span class="nav-text">安装Apache</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装PHP"><span class="nav-number">4.</span> <span class="nav-text">安装PHP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试-PHP，建立一个探针文件"><span class="nav-number">5.</span> <span class="nav-text">测试 PHP，建立一个探针文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#让PHP5支持MySql"><span class="nav-number">6.</span> <span class="nav-text">让PHP5支持MySql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-XCache-优化缓存"><span class="nav-number">7.</span> <span class="nav-text">安装 XCache 优化缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装phpmyadmin管理Mysql"><span class="nav-number">8.</span> <span class="nav-text">安装phpmyadmin管理Mysql</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mousycoder</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://weibo.com/mousycoder">mousycoder</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/mousycoder/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_pv">
+    总访问量：<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_uv">
+  访客数：<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"mousycoder"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

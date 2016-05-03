@@ -1,0 +1,1013 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="这是网易2015校招Java面试题,直接上题目。
+题目1234567891011121314151617181920212223242526272829303132package com.mousycoder.staticTest;public class HelloB extends HelloA &amp;#123;	public HelloB() &amp;#123;		System.out.println">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一道面试题引发的思考:（1）">
+<meta property="og:url" content="http://mousycoder.com/2015/10/12/thinking-of-interview-question-1/index.html">
+<meta property="og:site_name" content="极简小站">
+<meta property="og:description" content="这是网易2015校招Java面试题,直接上题目。
+题目1234567891011121314151617181920212223242526272829303132package com.mousycoder.staticTest;public class HelloB extends HelloA &amp;#123;	public HelloB() &amp;#123;		System.out.println">
+<meta property="og:image" content="http://7xjl4u.com1.z0.glb.clouddn.com/15-10-14/18963137.jpg">
+<meta property="og:image" content="http://7xjl4u.com1.z0.glb.clouddn.com/15-10-14/34122370.jpg">
+<meta property="og:updated_time" content="2016-04-20T11:53:02.486Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一道面试题引发的思考:（1）">
+<meta name="twitter:description" content="这是网易2015校招Java面试题,直接上题目。
+题目1234567891011121314151617181920212223242526272829303132package com.mousycoder.staticTest;public class HelloB extends HelloA &amp;#123;	public HelloB() &amp;#123;		System.out.println">
+<meta name="twitter:image" content="http://7xjl4u.com1.z0.glb.clouddn.com/15-10-14/18963137.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 12508341,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 一道面试题引发的思考:（1） | 极简小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?16bedf24666607f78e3909b2d78ed8b2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="http://s6.cnzz.com/stat.php?id=1258224851&web_id=1258224851" type="text/javascript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">极简小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">一个分享技术干货的小清新网站</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project" rel="section">
+            
+              <i class="menu-item-icon fa fa-heart fa-fw"></i> <br />
+            
+            项目
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '2Lnpxp9f1uxjLcyTgoeg','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                一道面试题引发的思考:（1）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-10-12T15:55:35+08:00" content="2015-10-12">
+              2015-10-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/一道面试题引发的思考/" itemprop="url" rel="index">
+                    <span itemprop="name">一道面试题引发的思考</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/10/12/thinking-of-interview-question-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/12/thinking-of-interview-question-1/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这是网易2015校招Java面试题,直接上题目。</p>
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">package com.mousycoder.staticTest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">HelloB</span> <span class="title">extends</span> <span class="title">HelloA</span> &#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">HelloB</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"HelloB"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	&#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"I’m B class"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"static B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) </span>&#123;</span><br><span class="line">		<span class="keyword">new</span> HelloB();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">HelloA</span> &#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">HelloA</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"HelloA"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	&#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"I’m A class"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"static A"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="答案"><a href="#答案" class="headerlink" title="答案"></a>答案</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> A</span><br><span class="line"><span class="keyword">static</span> B</span><br><span class="line">I’m A <span class="keyword">class</span></span><br><span class="line">HelloA</span><br><span class="line">I’m B <span class="keyword">class</span></span><br><span class="line">HelloB()</span><br></pre></td></tr></table></figure>
+<h2 id="考察点"><a href="#考察点" class="headerlink" title="考察点"></a>考察点</h2><ul>
+<li>static 相关知识</li>
+<li>非静态代码块相关知识</li>
+<li>类加载顺序</li>
+</ul>
+<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><ul>
+<li><p>存在父子关系，又有静态代码块，先执行父类静态代码块，再执行子类静态代码块，故打印<code>static A</code> <code>static B</code></p>
+</li>
+<li><p>存在父子关系，又有非静态代码块，先执行父类非静态代码块，父类构造器，再执行子类非静态代码块，子类构造器故打印<code>I&#39;m A class</code> <code>HelloA</code> <code>I&#39;m B class</code> <code>HelloB</code></p>
+</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
+<li>静态代码块=&gt;非静态代码块=&gt;构造方法</li>
+<li>父子关系：父类静态代码块=&gt;子类静态代码块=&gt;父类非静态代码块=&gt;父类构造函数=&gt;子类非静态代码块=&gt;子类构造函数</li>
+</ul>
+<h2 id="扩展知识"><a href="#扩展知识" class="headerlink" title="扩展知识"></a>扩展知识</h2><h3 id="非静态代码块"><a href="#非静态代码块" class="headerlink" title="非静态代码块"></a>非静态代码块</h3><figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123; </span><br><span class="line">   System.out.println(<span class="string">"I'm B class"</span>)<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个叫做非静态代码块，也叫普通代码块，在每个类创建前(构造函数之前)调用 ，不创建对象的时候，不被调用，代码块中定义的变量都是局部变量，如果有父子关系的话，先执行父类的，再执行子类的。非静态代码块属于对象，静态代码块属于类。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">package com.mousycoder.staticTest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Child</span> <span class="title">extends</span> <span class="title">Father</span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"child--&gt;static"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> n = <span class="number">20</span>;</span><br><span class="line">	</span><br><span class="line">	&#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"Child Non-Static"</span>);</span><br><span class="line">		n = <span class="number">30</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">int</span> x = <span class="number">200</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Child</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>(<span class="string">"The other constructor"</span>);</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"child constructor body: "</span> + n);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Child</span>(<span class="params">String s</span>) </span>&#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(s);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">age</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"age="</span> + n);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printX</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"x="</span> + x);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) </span>&#123;</span><br><span class="line">		<span class="keyword">new</span> Child().printX();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Father</span> &#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		<span class="comment">//System.out.println("n+"+n);</span></span><br><span class="line">			<span class="comment">//当n定义在下面时，会提示Cannot reference a field before it is defined，</span></span><br><span class="line">			<span class="comment">//所以必须把n定义移到上面才可以输出</span></span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"super--&gt;static"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> n = <span class="number">10</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">int</span> x = <span class="number">100</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Father</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"super's x="</span> + x);</span><br><span class="line">		age();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	&#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"Father Non-Static"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">age</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"nothing"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果:<br><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">super</span>--&gt;<span class="keyword">static</span></span><br><span class="line">child--&gt;<span class="keyword">static</span></span><br><span class="line">Father Non-Static</span><br><span class="line"><span class="keyword">super</span><span class="symbol">'s</span> x=<span class="number">100</span></span><br><span class="line">age=<span class="number">0</span></span><br><span class="line">Child Non-Static</span><br><span class="line">The other constructor</span><br><span class="line">child constructor body: <span class="number">30</span></span><br><span class="line">x=<span class="number">200</span></span><br></pre></td></tr></table></figure></p>
+<p>解析：</p>
+<ul>
+<li>先执行静态代码块，有父子关系，先执行父类静态代码块，打印<code>super--&gt;static</code></li>
+<li>执行子类静态代码块，打印<code>child--&gt;static</code></li>
+<li>实例化子类的时候，先实例化父类，在调用父类构造方法之前，先调用父类非静态代码块，打印<code>Father Non-Static</code></li>
+<li>实例化父类，调用父类构造方法，执行第一句 System.out.println(“super’s x=” + x); 在调用构造方法之前，成员变量x 已经被赋值为100，打印<code>super&#39;s x=100</code></li>
+<li>执行age()方法，因为main方法中真正实例化的是子类，<strong>子类又重写了父类的age方法，所以执行子类的age方法，此时子类还没初始化，默认n=0 ,打印<code>age=0</code></strong></li>
+<li>实例化子类，调用子类构方法之前，调用子类非静态代码块，打印<code>Child Non-Static</code></li>
+<li>调用子类构造方法，执行this(“The other constructor”),调用子类的Child（String s），打印<code>The other constructor</code></li>
+<li>执行System.out.println(“child constructor body: “ + n); 初始化之前 成员变量初始值为20，执行完非静态代码块后 n被修改成30 ，所以这里n =30 打印<code>child constructor body: 30</code></li>
+<li>执行printX()方法，打印<code>x = 200</code></li>
+</ul>
+<p>注意点：</p>
+<ul>
+<li>子类重写父类的方法</li>
+<li>虽然非静态代码块里是局部变量，但是可以改变类的成员变量的值</li>
+</ul>
+<h3 id="静态代码块"><a href="#静态代码块" class="headerlink" title="静态代码块"></a>静态代码块</h3><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">static</span> &#123;</span><br><span class="line">  System<span class="selector-class">.out</span><span class="selector-class">.println</span>(<span class="string">"static B"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>属于静态代码块，使用场景：1.想用一个存储区域来保存一个特定的数据，不想创建对象 2.创建一个特殊的方法，与这个类的对象没有关联，即使没创建对象，也可以调用</p>
+<h3 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h3><p>静态变量也叫做static变量，静态变量和非静态变量的区别在于静态变量被所有的对象所共享，<strong>在内存中只有一个副本</strong>，它当且仅当类初次加载时会被初始化，而非静态变量是对象所拥有的，在创建对象的时候被初始化，<strong>存在多个副本，各个对象拥有的副本互不影响</strong> 好处：1.可以用类名直接访问(方便),也可以用对象访问(不推荐) 2.只分配一次内存，节省空间</p>
+<h3 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h3><p>静态方法就是不会被this和super的方法。特点：1.在static方法内部不能调用所属类的实例变量和实例方法（非静态方法），但是可以在没有创建任何对象的前提下，仅仅通过类本身(类名)来调用static方法 2.main方法就是static 方法，因为执行main方法的时候，没有创建任何对象，只能通过类名去访问 3.没有显示声明，类的构造器也是静态方法,参考：<a href="http://rednaxelafx.iteye.com/blog/652719" target="_blank" rel="external">实例构造器是不是静态方法？</a><br>常见的错误<code>Cannot make a static reference to the non-static field</code> 就是静态方法中引用了非静态的的变量，静态变量是不依赖对象而存在的，非静态变量是依赖对象而存在的</p>
+<p>示例：非静态方法可以访问静态变量、方法，<strong>静态方法是不可以访问非静态变量，方法</strong><br><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">package com.mousycoder.staticTest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Test</span> &#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String str1 = <span class="string">"111"</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> String str2 = <span class="string">"ddd"</span>;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Test</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span>  <span class="keyword">void</span> <span class="title">print1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(str1);</span><br><span class="line">		System.<span class="keyword">out</span>.println(str2);</span><br><span class="line">		print1();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print2</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		System.<span class="keyword">out</span>.println(str1);</span><br><span class="line">		System.<span class="keyword">out</span>.println(str2);  <span class="comment">//报错  Cannot make a static reference to the non-static field</span></span><br><span class="line">		print1(); <span class="comment">//报错</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="静态代码块-1"><a href="#静态代码块-1" class="headerlink" title="静态代码块"></a>静态代码块</h3><p>由static 关键字修饰的代码块叫做静态代码块，特点：用于提高程序性能，类在初始化的时候，JVM会按照他们在类中出现的顺序加载static 代码块，并且只会执行一遍</p>
+<p>示例：只生成一个String s 对象和一个String m 对象<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">package com.mousycoder.staticTest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> HelloStatic &#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">String</span> s ;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">String</span> m ;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		s = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"hell"</span>);</span><br><span class="line">		m = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"0"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	    <span class="built_in">String</span> hello() &#123;</span><br><span class="line">	        <span class="built_in">String</span> s = <span class="string">"hell"</span>;</span><br><span class="line">	        <span class="built_in">String</span> m = <span class="string">"o"</span>;</span><br><span class="line">	        <span class="keyword">return</span> s + m;</span><br><span class="line">	    &#125;</span><br><span class="line">	    </span><br><span class="line">	    <span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">void</span> main(<span class="built_in">String</span>[] args) &#123;</span><br><span class="line">	    	<span class="built_in">Date</span> start = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">	    	<span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; <span class="number">1000000000</span> ; i++) &#123;</span><br><span class="line">	    		HelloStatic h = <span class="keyword">new</span> HelloStatic();</span><br><span class="line">		    	h.hello();</span><br><span class="line">			&#125;</span><br><span class="line">	    	<span class="built_in">Date</span> end = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">	    	System.out.println(end.getTime() - start.getTime());</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>耗时：12ms </p>
+<p>示例： 生成N个String s和String m对象<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">package com.mousycoder.staticTest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> Hello &#123;</span><br><span class="line">	    </span><br><span class="line">	    <span class="built_in">String</span> hello() &#123;</span><br><span class="line">	        <span class="built_in">String</span> s = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"hell"</span>);</span><br><span class="line">	        <span class="built_in">String</span> m = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"o"</span>);</span><br><span class="line">	        <span class="keyword">return</span> s + m;</span><br><span class="line">	    &#125;</span><br><span class="line">	    </span><br><span class="line">	    <span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">void</span> main(<span class="built_in">String</span>[] args) &#123;</span><br><span class="line">	    	<span class="built_in">Date</span> start = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">	    	<span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; <span class="number">1000000000</span>; i++) &#123;</span><br><span class="line">	    		Hello h = <span class="keyword">new</span> Hello();</span><br><span class="line">		    	h.hello();</span><br><span class="line">			&#125;</span><br><span class="line">	    </span><br><span class="line">	    	<span class="built_in">Date</span> end = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">	    	System.out.println(end.getTime() - start.getTime());</span><br><span class="line">		&#125;</span><br><span class="line">	    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>所用时间 9645ms</p>
+<p>公共的变量应该放到static里初始化，有利于提高效率</p>
+<h3 id="静态变量访问权"><a href="#静态变量访问权" class="headerlink" title="静态变量访问权"></a>静态变量访问权</h3><p>static 变量是被所有对象共享的，只要该对象有权限，就可以访问该变量</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package com.mousycoder.staticTest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Main</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> <span class="keyword">value</span> = <span class="number">33</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) throws Exception</span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Main().printValue();</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">printValue</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">int</span> <span class="keyword">value</span> = <span class="number">3</span>;</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="keyword">this</span>.<span class="keyword">value</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该输出为：33 ,new Main()创建了一个对象，通过this.value是访问的该对象的value 而int value = 3 是局部变量，并不是和该对象相关联的，因为static变量是共享的，所以该对象可以访问到value 值为 33 ，把this 去掉 则结果为 3</p>
+<h3 id="静态变量相关面试题"><a href="#静态变量相关面试题" class="headerlink" title="静态变量相关面试题"></a>静态变量相关面试题</h3><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">package com.mousycoder.staticTest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Test</span> &#123;</span><br><span class="line">    Person person = <span class="keyword">new</span> Person(<span class="string">"Test"</span>);</span><br><span class="line">    <span class="keyword">static</span>&#123;</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="string">"test static"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Test</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="string">"test constructor"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> MyClass();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title">Person</span>&#123;</span><br><span class="line">    <span class="keyword">static</span>&#123;</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="string">"person static"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span>(<span class="params">String str</span>) </span>&#123;</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="string">"person "</span>+str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title">MyClass</span> <span class="title">extends</span> <span class="title">Test</span> &#123;</span><br><span class="line">    Person person = <span class="keyword">new</span> Person(<span class="string">"MyClass"</span>);</span><br><span class="line">    <span class="keyword">static</span>&#123;</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="string">"myclass static"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="string">"myclass constructor"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>顺序是：<br><figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">test <span class="keyword">static</span></span><br><span class="line">myclass <span class="keyword">static</span></span><br><span class="line">person <span class="keyword">static</span></span><br><span class="line">person Test</span><br><span class="line">test <span class="function"><span class="keyword">constructor</span></span><br><span class="line"><span class="title">person</span> <span class="title">MyClass</span></span><br><span class="line"><span class="title">myclass</span> <span class="title">constructor</span></span></span><br></pre></td></tr></table></figure></p>
+<p>执行顺序</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">test <span class="keyword">static</span> =&gt;<span class="keyword">new</span> MyClass() =&gt; myclass <span class="keyword">static</span> =&gt; <span class="keyword">new</span> MyClass() =&gt; person <span class="keyword">static</span> =&gt; Person person = <span class="keyword">new</span> Person(<span class="string">"Test"</span>) =&gt; person Test =&gt; Person person = <span class="keyword">new</span> Person(<span class="string">"Test"</span>) =&gt; test constructro =&gt; Person person = <span class="keyword">new</span> Person(<span class="string">"Myclass"</span>) =&gt; person MyClass =&gt; Person person = <span class="keyword">new</span> Person(<span class="string">"MyClass"</span>) =&gt; myclass contructor</span><br><span class="line">`</span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li>执行main方法，实例化MyClass </li>
+<li>发现MyClass 有父类Test，首先实例化Test</li>
+<li>加载Test类，这个时候会执行static方法，打印 <code>test static</code>, </li>
+<li>然后要实例化MyClass 类，加载MyClass类，执行static方法，打印<code>myclass static</code></li>
+<li>在所有类按照顺序都加载完毕后，开始一个一个实例化类，先实例化父对象 Test类</li>
+<li>在实例化之前，要先<strong>初始化成员变量</strong>，这个时候会执行<code>Person p = new Person(&quot;Test&quot;)</code>,这个时候发现Person类还没有被加载过，因此先加载Person类</li>
+<li>执行Person类的static方法，打印<code>person static</code>接着实例化Person p = new Person(“Test”) 调用Person的构造方法，打印<code>person Test</code></li>
+<li>然后开始调用Test的构造方法,打印<code>test constructor</code>,Test类初始化完毕</li>
+<li>开始实例化Myclass类，首先还是初始化MyClass的成员变量 ,<strong>因为Person已经加载过了,所以只执行一遍</strong>,只需根据类的模板执行其构造方法，来复制成另外一个副本,此时打印<code>person MyClass</code></li>
+<li>最后执行Myclass的构造方法，打印<code>myclass constructor</code></li>
+</ul>
+<p>总结：</p>
+<p>非静态代码块=&gt;初始化成员变量=&gt;非静态代码块=&gt;构造器方法</p>
+<hr>
+<p>感谢您的耐心阅读，如果您发现文章中有一些没表述清楚的，或者是不对的地方，请给我留言，你的鼓励是作者写作最大的动力，<br>如果您认为本文质量不错，读后觉得收获很大，不妨小额赞助我一下，让我更有动力继续写出高质量的文章。</p>
+<ul>
+<li>支付宝<br><img src="http://7xjl4u.com1.z0.glb.clouddn.com/15-10-14/18963137.jpg" alt=""></li>
+<li>微信<br><img src="http://7xjl4u.com1.z0.glb.clouddn.com/15-10-14/34122370.jpg" alt=""></li>
+</ul>
+<p>作 者 : <a href="http://weibo.com/mousycoder" target="_blank" rel="external">@mousycoder</a></p>
+<p>原文出处 : <a href="http://mousycoder.com/2015/10/12/thinking-of-interview-question-1/">http://mousycoder.com/2015/10/12/thinking-of-interview-question-1/</a></p>
+<p>创作时间：2015-7-1</p>
+<p>更新时间：2015-10-14</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag">#java</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/12/classic-tutorial-of-ghost-blog/" rel="prev" title="「搭建Ghost博客」经典教程">
+                「搭建Ghost博客」经典教程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/10/12/thinking-of-interview-question-1/"
+           data-title="一道面试题引发的思考:（1）" data-url="http://mousycoder.com/2015/10/12/thinking-of-interview-question-1/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/6722977?v=3&s=460"
+               alt="mousycoder" />
+          <p class="site-author-name" itemprop="name">mousycoder</p>
+          <p class="site-description motion-element" itemprop="description">虚心学习，乐于分享</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">51</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-douban"></i> DouBan
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/mousy_coder" target="_blank">
+                  
+                    <i class="fa fa-zhiHu"></i> ZhiHu
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">Links</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" target="_blank">MacTalk</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xiongyingqi.com/" target="_blank">熊瑛琪</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" target="_blank">何登成</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yuguo.us/" target="_blank">Yuguo</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ido321.com/" target="_blank">淡忘浅思</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://blog.jamespan.me/" target="_blank">潘家邦</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.webank.pw/" target="_blank">丁佳学</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/jiuyuehe/" target="_blank">肖敏</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cyblogs.com/" target="_blank">陈袁</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#答案"><span class="nav-number">2.</span> <span class="nav-text">答案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#考察点"><span class="nav-number">3.</span> <span class="nav-text">考察点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解析"><span class="nav-number">4.</span> <span class="nav-text">解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">5.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展知识"><span class="nav-number">6.</span> <span class="nav-text">扩展知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#非静态代码块"><span class="nav-number">6.1.</span> <span class="nav-text">非静态代码块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态代码块"><span class="nav-number">6.2.</span> <span class="nav-text">静态代码块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态变量"><span class="nav-number">6.3.</span> <span class="nav-text">静态变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态方法"><span class="nav-number">6.4.</span> <span class="nav-text">静态方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态代码块-1"><span class="nav-number">6.5.</span> <span class="nav-text">静态代码块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态变量访问权"><span class="nav-number">6.6.</span> <span class="nav-text">静态变量访问权</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态变量相关面试题"><span class="nav-number">6.7.</span> <span class="nav-text">静态变量相关面试题</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mousycoder</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://weibo.com/mousycoder">mousycoder</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/mousycoder/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_pv">
+    总访问量：<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_uv">
+  访客数：<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"mousycoder"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

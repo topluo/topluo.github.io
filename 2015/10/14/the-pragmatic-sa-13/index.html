@@ -1,0 +1,1012 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="极简小站,mousycoder" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="概念是计算机中的程序关于某数据集合上的一次运行活动，是系统进行资源分配和调度的基本单位。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【系统架构师修炼之道】（13）：操作系统基础知识——进程基础知识">
+<meta property="og:url" content="http://mousycoder.com/2015/10/14/the-pragmatic-sa-13/index.html">
+<meta property="og:site_name" content="极简小站">
+<meta property="og:description" content="概念是计算机中的程序关于某数据集合上的一次运行活动，是系统进行资源分配和调度的基本单位。">
+<meta property="og:image" content="http://7xjl4u.com1.z0.glb.clouddn.com/15-9-8/74729380.jpg">
+<meta property="og:image" content="http://7xjl4u.com1.z0.glb.clouddn.com/15-9-8/4195786.jpg">
+<meta property="og:image" content="http://7xjl4u.com1.z0.glb.clouddn.com/15-9-8/78316643.jpg">
+<meta property="og:image" content="http://7xjl4u.com1.z0.glb.clouddn.com/15-10-14/18963137.jpg">
+<meta property="og:image" content="http://7xjl4u.com1.z0.glb.clouddn.com/15-10-14/34122370.jpg">
+<meta property="og:updated_time" content="2016-04-20T11:53:02.482Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【系统架构师修炼之道】（13）：操作系统基础知识——进程基础知识">
+<meta name="twitter:description" content="概念是计算机中的程序关于某数据集合上的一次运行活动，是系统进行资源分配和调度的基本单位。">
+<meta name="twitter:image" content="http://7xjl4u.com1.z0.glb.clouddn.com/15-9-8/74729380.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 12508341,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 【系统架构师修炼之道】（13）：操作系统基础知识——进程基础知识 | 极简小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?16bedf24666607f78e3909b2d78ed8b2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="http://s6.cnzz.com/stat.php?id=1258224851&web_id=1258224851" type="text/javascript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">极简小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">一个分享技术干货的小清新网站</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project" rel="section">
+            
+              <i class="menu-item-icon fa fa-heart fa-fw"></i> <br />
+            
+            项目
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '2Lnpxp9f1uxjLcyTgoeg','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                【系统架构师修炼之道】（13）：操作系统基础知识——进程基础知识
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-10-14T13:41:34+08:00" content="2015-10-14">
+              2015-10-14
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/系统架构师修炼之道/" itemprop="url" rel="index">
+                    <span itemprop="name">系统架构师修炼之道</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/10/14/the-pragmatic-sa-13/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/14/the-pragmatic-sa-13/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>是计算机中的程序关于某数据集合上的一次运行活动，是系统进行资源分配和调度的基本单位。</p>
+<a id="more"></a>
+<h2 id="进程分类-性质"><a href="#进程分类-性质" class="headerlink" title="进程分类(性质)"></a>进程分类(性质)</h2><ol>
+<li><p>系统进程<br>windows常见的有 </p>
+<ul>
+<li>dllhost.exe(DCOM DLL Host进程支持基于COM对象支持DLL以运行Windows程序)</li>
+<li>kernel32.dll(Windows壳进程用于管理多线程、内存和资源) </li>
+<li>mprexe.exe(Windows路由进程包括向适当的网络部分发出网络请求)</li>
+<li>snmp.exe(Windows简单的网络协议代理（SNMP）用于监听和发送请求到适当的网络部分)</li>
+<li>system(Microsoft Windows系统进程)</li>
+<li>tcpsvcs.exe(TCP/IP Services Application支持透过TCP/IP连接局域网和Internet)</li>
+</ul>
+</li>
+<li><p>用户进程</p>
+</li>
+<li><p>父进程<br>已创建一个或多个子进程的进程（Linux 中调用fork创建新进程的进程即为父进程）</p>
+</li>
+<li>子进程<br>另一进程所创建的进程，子进程继承了对应的父进程的大部分属性，如文件描述符。在Unix中，子进程通常为系统调用fork的产物。在此情况下，子进程一开始就是父进程的副本，某一进程没有父进程，则可知该进程很可能由内核直接生成，进程ID为1的进程（即init进程）是在系统引导阶段由内核直接创建的。无父进程的进程，在对应的父进程结束执行后，进程就会变成孤儿进程，但之后会立即由init进程“收养”为其子进程。当某一子进程结束、中断或恢复执行时，内核会发送SIGCHLD信号予其父进程。在默认情况下，父进程会以SIG_IGN函数忽略之</li>
+</ol>
+<h2 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h2><h3 id="三态模型"><a href="#三态模型" class="headerlink" title="三态模型"></a>三态模型</h3><p><img src="http://7xjl4u.com1.z0.glb.clouddn.com/15-9-8/74729380.jpg" alt=""></p>
+<p>就绪，运行，阻塞</p>
+<ul>
+<li>就绪状态：当进程已分配到除CPU以外的所有必要的资源，只要获得处理机便可立即执行</li>
+<li>运行状态：进程已获得处理机，其程序正在处理机上执行</li>
+<li>阻塞状态：由于等待某个事件发生而无法执行时，便放弃处理机而处于阻塞状态(等待I/O完成、申请缓冲区不能满足、等待信件)</li>
+</ul>
+<p>调度：时间片已经用完，让出处理器</p>
+<h3 id="五态模型"><a href="#五态模型" class="headerlink" title="五态模型"></a>五态模型</h3><p><img src="http://7xjl4u.com1.z0.glb.clouddn.com/15-9-8/4195786.jpg" alt=""></p>
+<h3 id="进程状态转化"><a href="#进程状态转化" class="headerlink" title="进程状态转化"></a>进程状态转化</h3><p><img src="http://7xjl4u.com1.z0.glb.clouddn.com/15-9-8/78316643.jpg" alt=""></p>
+<p>进程的控制机构是由操作系统内核实现，具体是通过控制原语。</p>
+<h2 id="原语"><a href="#原语" class="headerlink" title="原语"></a>原语</h2><p>若干条指令组成的，用于完成一定功能的一个过程，不可分割性.即原语的执行必须是连续的。<br>原语必须在管态下(cpu的特权态，执行指令系统的全集)执行，指令可以在目态(cpu的用户态，不能使用特权指令，不能直接取用系统资源与改变机器状态，并且只允许用户程序访问自己的存储区域)执行</p>
+<h3 id="包含"><a href="#包含" class="headerlink" title="包含"></a>包含</h3><ul>
+<li>创建原语</li>
+</ul>
+<p>实际系统中创建一个进程有两种方法：一是由操作系统建立，0#进程就是由操作系统建立的；二是由其他进程创建一个新的进程，创建进程原语总是先为新建进程申请一空白PCB，并为之分配唯一的数字表示符，使之获得PCB的内部名称，若该进程所对应的程序不在内存中，则应将它从外存储器调入内存，并将该进程有关信息填入PCB中，然后置该进程为就绪状态，并将它排入就绪队列和进程家族队列中，具体过程：1.从PCB集合种索取一个空白PCB，并获得该PCB的内部标识符i 2.把调用者提供的参数，以及从执行过程EP中获得的调用者内部标识j ，填入该PCB，设置记帐数据，置新进程为“静止就绪”状态 3.PCB分别插入就绪队列RQ和进程家族中</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Procedure Create(n,S0,k0,M0,R0,acc)</span><br><span class="line">begin</span><br><span class="line"><span class="string">i:</span>=get Internal Name(n);<span class="comment">//获得内部名</span></span><br><span class="line">i.<span class="string">id:</span>=n;                <span class="comment">//填外部名</span></span><br><span class="line">i.<span class="string">Priority:</span>=k0;         <span class="comment">//填优先表</span></span><br><span class="line">i.cpu <span class="string">state:</span>=S0;        <span class="comment">//填cpu初始状态</span></span><br><span class="line">i.<span class="string">mainstore:</span>=M0;        <span class="comment">//填写主存区域</span></span><br><span class="line">i.<span class="string">resource:</span>=R0;         <span class="comment">//填写资源清单</span></span><br><span class="line">i.<span class="string">status:</span>=<span class="string">'Readys'</span>;     <span class="comment">//填写进程状态</span></span><br><span class="line"><span class="string">j:</span>=EP;                  <span class="comment">//获取调用者内部标识</span></span><br><span class="line">i.<span class="string">Parent:</span>=j;            <span class="comment">//填入i进程的父进程j        </span></span><br><span class="line">i.<span class="string">progeny:</span>=<span class="literal">null</span>;        <span class="comment">//i的家庭指针为空</span></span><br><span class="line">j.<span class="string">progeny:</span>=i;           <span class="comment">//把i填入其父进程pcb中的家庭指针处</span></span><br><span class="line">i.<span class="string">state:</span>=RQ;            <span class="comment">//i所在状态队列首指针</span></span><br><span class="line">Insert(RQ,i);           <span class="comment">//把i进程插入RQ队尾</span></span><br><span class="line"><span class="keyword">continue</span>;</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<ul>
+<li>撤销原语</li>
+</ul>
+<p>撤消进程的实质是撤消进程存在标志——进程控制块PCB。一旦PCB被撤消，进程就消亡了，撤消进程的实质是撤消进程存在标志——进程控制块PCB。一旦PCB被撤消，进程就消亡了。撤消原语的操作过程大致如下：以调用者提供的标志符n为索引，从该进程所在的队列，将它从该队列中消去，并撤消属于该进程的一切“子孙进程”，若有父进程则从父进程PCB中删除指向该进程的指针，并释放撤消进程所占用的全部资源，或则将其归还给其父进程，或则归还给系统。若被撤消的进程处于执行状态，应立即中断该进程的执行，并设置调度标志为真，以指示该进程被撤消后系统应重新调度,撤销原语在撤销指定进程的同时也应该撤销所指示的子孙进程, 所以用kill()递归算法撤销子孙进程。引起进程终止事件可分三类：正常结束、异常结束、外界干预。<br><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">Procedure</span>  <span class="title">destroy</span><span class="params">(n)</span></span><br><span class="line"><span class="title">Begin</span></span><br><span class="line"><span class="title">Sched</span>:</span>=<span class="keyword">false</span>;</span><br><span class="line">i:=getinternal name(n);<span class="comment">//获取n进程的内部名</span></span><br><span class="line">kill(i);</span><br><span class="line"><span class="keyword">if</span> sched <span class="keyword">then</span> scheduler <span class="keyword">else</span> <span class="keyword">continue</span>;<span class="comment">//假如Schde为真，则转调度程序，否则继续</span></span><br><span class="line"><span class="keyword">end</span> </span><br><span class="line"><span class="function"><span class="keyword">procedure</span> <span class="title">kill</span><span class="params">(i)</span></span><br><span class="line"><span class="title">begin</span></span><br><span class="line"><span class="title">if</span> <span class="title">i</span>.<span class="title">stata</span><span class="params">(i)</span>=”<span class="title">executing</span>” <span class="title">then</span></span><br><span class="line"><span class="title">begin</span> <span class="title">stop</span><span class="params">(i)</span>;</span></span><br><span class="line">sched:=<span class="keyword">true</span>  <span class="keyword">end</span>;</span><br><span class="line"><span class="keyword">remove</span> (i.stata,i);               <span class="comment">//将被撤消进程从i.state所指示的队列中除去</span></span><br><span class="line"><span class="keyword">for</span> all S∈i.progeny <span class="keyword">do</span> kill(s);</span><br><span class="line"><span class="keyword">for</span> all r∈(i.main store ∪i.resources) <span class="keyword">do</span></span><br><span class="line"><span class="keyword">if</span> owned(r) <span class="keyword">then</span> insert (r.semaphore,r.date);<span class="comment">//属于父进程的资源归还且插入父进程资源清单</span></span><br><span class="line"><span class="keyword">for</span> all ∈created resources(i) <span class="keyword">do</span> <span class="keyword">remove</span> descriptor (R);<span class="comment">//撤消自己的资源清单归还系统</span></span><br><span class="line"><span class="keyword">remove</span> process control <span class="keyword">block</span> (i);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>阻塞原语</li>
+</ul>
+<p>阻塞原语的大致工作过程如下：开始时，进程正处于执行状态，因此首先应中断CPU执行，并保存该进程的CPU现场，然后把阻塞状态赋予该进程，并将它插入到具有相同实体的阻塞队列中,引起阻塞和唤醒的事件可分四类：一、请求系统服务。二、启动某种操作（同步由int将该进程唤醒）三、新数据尚未到达时。四、无新工作可做。<br><figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">Procedure</span>  <span class="title">block</span></span><br><span class="line"><span class="title">Begin</span></span><br><span class="line"><span class="title">i</span>:</span>=EP;      <span class="comment">//从执行进程EP获得调用者内部标识符</span></span><br><span class="line">stop(i);</span><br><span class="line">i.status:=”blockda”; i.stata=WQ(r);<span class="comment">//填写阻塞队列指针</span></span><br><span class="line">insert(WQ(r),i); <span class="comment">//把i插入WQ队尾</span></span><br><span class="line">scheduler        <span class="comment">//转调度程序</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>唤醒原语</li>
+</ul>
+<p>进程因为等待事件的发生而处于阻塞状态，当等待的事件完成后，进程又具有了继续执行的条件，这时就要把该进程从阻塞状态转变为就绪状态。这个工作由唤醒原语来完成。唤醒原语执行的操作有：先把被唤醒进程从阻塞队列中移出，设置该进程当前状态为就绪状态，然后再将该进程插入到就绪队列中。<br><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">Procedure</span> <span class="title">wakeup</span><span class="params">(n)</span></span><br><span class="line"><span class="title">Begin</span></span><br><span class="line"><span class="title">i</span> :</span>=getinternal name(n);</span><br><span class="line"><span class="keyword">remove</span> (WQ(r),i);    <span class="comment">//把i进程从等待r而受阻塞队列中摘除</span></span><br><span class="line">i.status:=”ready”; <span class="comment">//置i进程为“就绪”状态</span></span><br><span class="line">i.sdata:=RQ;         <span class="comment">//把i进程插入到就绪队列</span></span><br><span class="line">insert(RQ,i);</span><br><span class="line"><span class="keyword">continue</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>挂起原语</li>
+</ul>
+<p>让某些进程暂时不参与资源竞争,挂起的方式有三类：一、把挂起原语调用者本身挂起，即自己挂起自己。二、挂起某个标识符的进程。三、将某个指定的标志符及其全部或部分子孙挂起用的保存n进程的pcb副本的内存区。 </p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">Procedure</span> <span class="title">suspend</span><span class="params">(n,a)</span></span><br><span class="line"><span class="title">Begin</span></span><br><span class="line"><span class="title">i</span>:</span>=getinternal name(n);</span><br><span class="line">s:=i.status;</span><br><span class="line"><span class="keyword">if</span> s=”executing” <span class="keyword">then</span> stop(i);</span><br><span class="line">a:=<span class="keyword">copy</span> PCB(i);</span><br><span class="line">i.status:=<span class="keyword">if</span> s=”blockeda” <span class="keyword">then</span> “blockeds” <span class="keyword">else</span> readys;</span><br><span class="line"><span class="keyword">if</span> s=”executing” <span class="keyword">then</span> scheduler <span class="keyword">else</span> <span class="keyword">continue</span>;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>激活原语</li>
+</ul>
+<p>激活指定标志符的进程或激活某进程及其子孙进程</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">Procedure</span>  <span class="title">active</span><span class="params">(n)</span></span><br><span class="line"><span class="title">Begin</span></span><br><span class="line"><span class="title">i</span>:</span>=getinternal name(n)</span><br><span class="line">i.status:=<span class="keyword">if</span> i.status=”readys” <span class="keyword">then</span> “readya” <span class="keyword">else</span> blockeda;</span><br><span class="line"><span class="keyword">if</span> i.status=”readys” <span class="keyword">then</span> scheduler;<span class="comment">//当激活后的进程处于“readys”状态针，将引起重新调度</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">continue</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><ul>
+<li>请求（Req）型 </li>
+</ul>
+<p>高层向低层请求某种业务</p>
+<ul>
+<li>证实（Cfm）型</li>
+</ul>
+<p>提供业务的层证实某个动作已经完成</p>
+<ul>
+<li>指示（Ind）型</li>
+</ul>
+<p>提供业务的层向高层报告一个与特定业务相关的动作</p>
+<ul>
+<li>响应(Res)型</li>
+</ul>
+<p>用于应答，表示来自高层的指示原语已收到</p>
+<hr>
+<p>感谢您的耐心阅读，如果您发现文章中有一些没表述清楚的，或者是不对的地方，请给我留言，你的鼓励是作者写作最大的动力，<br>如果您认为本文质量不错，读后觉得收获很大，不妨小额赞助我一下，让我更有动力继续写出高质量的文章。</p>
+<ul>
+<li>支付宝<br><img src="http://7xjl4u.com1.z0.glb.clouddn.com/15-10-14/18963137.jpg" alt=""></li>
+<li>微信<br><img src="http://7xjl4u.com1.z0.glb.clouddn.com/15-10-14/34122370.jpg" alt=""></li>
+</ul>
+<p>作 者 : <a href="http://weibo.com/mousycoder" target="_blank" rel="external">@mousycoder</a></p>
+<p>原文出处 : <a href="http://mousycoder.com/2015/10/14/the-pragmatic-sa-13/">http://mousycoder.com/2015/10/14/the-pragmatic-sa-13/</a></p>
+<p>创作时间：2015-9-1</p>
+<p>更新时间：2015-10-16</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/14/the-pragmatic-sa-12/" rel="next" title="【系统架构师修炼之道】（12）：操作系统基础知识——操作系统的原理，类型和结构">
+                <i class="fa fa-chevron-left"></i> 【系统架构师修炼之道】（12）：操作系统基础知识——操作系统的原理，类型和结构
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/14/the-pragmatic-sa-14/" rel="prev" title="【系统架构师修炼之道】（14）：操作系统基础知识——同步和互斥">
+                【系统架构师修炼之道】（14）：操作系统基础知识——同步和互斥 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/10/14/the-pragmatic-sa-13/"
+           data-title="【系统架构师修炼之道】（13）：操作系统基础知识——进程基础知识" data-url="http://mousycoder.com/2015/10/14/the-pragmatic-sa-13/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/6722977?v=3&s=460"
+               alt="mousycoder" />
+          <p class="site-author-name" itemprop="name">mousycoder</p>
+          <p class="site-description motion-element" itemprop="description">虚心学习，乐于分享</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">51</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-douban"></i> DouBan
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/mousy_coder" target="_blank">
+                  
+                    <i class="fa fa-zhiHu"></i> ZhiHu
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">Links</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" target="_blank">MacTalk</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xiongyingqi.com/" target="_blank">熊瑛琪</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" target="_blank">何登成</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yuguo.us/" target="_blank">Yuguo</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ido321.com/" target="_blank">淡忘浅思</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://blog.jamespan.me/" target="_blank">潘家邦</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.webank.pw/" target="_blank">丁佳学</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/jiuyuehe/" target="_blank">肖敏</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cyblogs.com/" target="_blank">陈袁</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程分类-性质"><span class="nav-number">2.</span> <span class="nav-text">进程分类(性质)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程的状态"><span class="nav-number">3.</span> <span class="nav-text">进程的状态</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#三态模型"><span class="nav-number">3.1.</span> <span class="nav-text">三态模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五态模型"><span class="nav-number">3.2.</span> <span class="nav-text">五态模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程状态转化"><span class="nav-number">3.3.</span> <span class="nav-text">进程状态转化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原语"><span class="nav-number">4.</span> <span class="nav-text">原语</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#包含"><span class="nav-number">4.1.</span> <span class="nav-text">包含</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分类"><span class="nav-number">4.2.</span> <span class="nav-text">分类</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mousycoder</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://weibo.com/mousycoder">mousycoder</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/mousycoder/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_pv">
+    总访问量：<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_uv">
+  访客数：<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"mousycoder"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1014 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="极简小站,mousycoder" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="Java事务分为：JDBC事务、JTA事务，容器事务。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【深入浅出事务】（2）：Java的事务">
+<meta property="og:url" content="http://mousycoder.com/2016/02/15/explain-transaction-in-simple-language-2/index.html">
+<meta property="og:site_name" content="极简小站">
+<meta property="og:description" content="Java事务分为：JDBC事务、JTA事务，容器事务。">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-15/19697314.jpg">
+<meta property="og:image" content="http://static.mousycoder.com/16-1-15/64333912.jpg">
+<meta property="og:updated_time" content="2016-04-20T11:53:02.477Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【深入浅出事务】（2）：Java的事务">
+<meta name="twitter:description" content="Java事务分为：JDBC事务、JTA事务，容器事务。">
+<meta name="twitter:image" content="http://static.mousycoder.com/16-1-15/19697314.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 12508341,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 【深入浅出事务】（2）：Java的事务 | 极简小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?16bedf24666607f78e3909b2d78ed8b2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="http://s6.cnzz.com/stat.php?id=1258224851&web_id=1258224851" type="text/javascript"></script>
+  </div>
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">极简小站</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">一个分享技术干货的小清新网站</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project" rel="section">
+            
+              <i class="menu-item-icon fa fa-heart fa-fw"></i> <br />
+            
+            项目
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', '2Lnpxp9f1uxjLcyTgoeg','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                【深入浅出事务】（2）：Java的事务
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-02-15T18:16:14+08:00" content="2016-02-15">
+              2016-02-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/总结/" itemprop="url" rel="index">
+                    <span itemprop="name">总结</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/15/explain-transaction-in-simple-language-2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/15/explain-transaction-in-simple-language-2/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Java事务分为：JDBC事务、JTA事务，容器事务。</p>
+<a id="more"></a>
+<h2 id="JDBC事务"><a href="#JDBC事务" class="headerlink" title="JDBC事务"></a>JDBC事务</h2><p>利用JDBC定义的java.sql.Connection接口中setAutoCommit(boolean)来达到自动提交和手动提交，只能局限在同一个数据库连接，不能跨库。<br><strong>切记：MySQL只有InnoDB才有事务效果，其他引擎设置了autoCommit无效。</strong></p>
+<h3 id="不用JDBC事务的DEMO"><a href="#不用JDBC事务的DEMO" class="headerlink" title="不用JDBC事务的DEMO"></a>不用JDBC事务的DEMO</h3><p>SQL<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`test1`</span> (</span><br><span class="line"><span class="string">`id`</span>  <span class="built_in">bigint</span>(<span class="number">1</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> ,</span><br><span class="line"><span class="string">`name`</span>  <span class="built_in">varchar</span>(<span class="number">1</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span> ,</span><br><span class="line">PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`test2`</span> (</span><br><span class="line"><span class="string">`id`</span>  <span class="built_in">bigint</span>(<span class="number">1</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> ,</span><br><span class="line"><span class="string">`name`</span>  <span class="built_in">varchar</span>(<span class="number">1</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span> ,</span><br><span class="line">PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>Java<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mousycoder.server.jdbc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.Connection;</span><br><span class="line"><span class="keyword">import</span> java.sql.DriverManager;</span><br><span class="line"><span class="keyword">import</span> java.sql.PreparedStatement;</span><br><span class="line"><span class="keyword">import</span> java.sql.SQLException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> class JdbcNoTransaction &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">String</span> DB_DRIVER_CLASS = <span class="string">"com.mysql.jdbc.Driver"</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">String</span> DB_URL = <span class="string">"jdbc:mysql://xxx.mysql.rds.aliyuncs.com/xxx"</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">String</span> DB_USERNAME = <span class="string">"xx"</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">String</span> DB_PASSWORD = <span class="string">"xxx"</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span> INSERT_TEST1 = <span class="string">"INSERT INTO test1(id,name) VALUES(?,?)"</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span> INSERT_TEST2 = <span class="string">"INSERT INTO test2(id,name) VALUES(?,?)"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span>[] args) &#123;</span><br><span class="line">		Connection con = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			con = getConnection();</span><br><span class="line">			insertTest1(con);</span><br><span class="line">			insertTest2(con);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (ClassNotFoundException|SQLException  e ) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> (con != <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					con.close();</span><br><span class="line">				&#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> Connection getConnection() <span class="keyword">throws</span> ClassNotFoundException,</span><br><span class="line">			SQLException &#123;</span><br><span class="line">		Connection conn = <span class="keyword">null</span>;</span><br><span class="line">		Class.forName(DB_DRIVER_CLASS);</span><br><span class="line">		conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);</span><br><span class="line">		<span class="keyword">return</span> conn;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> insertTest1(Connection conn) <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">		PreparedStatement stmt;</span><br><span class="line">		stmt = conn.prepareStatement(<span class="string">"INSERT INTO test1(id,name) VALUES(?,?)"</span>);</span><br><span class="line">		stmt.setInt(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">		stmt.setString(<span class="number">2</span>, <span class="string">"1"</span>);</span><br><span class="line">		stmt.executeUpdate();</span><br><span class="line">		System.out.<span class="built_in">println</span>(<span class="string">"======insert into test1 successfully======"</span>);</span><br><span class="line">		stmt.close();</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> insertTest2(Connection conn) <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">		PreparedStatement stmt;</span><br><span class="line">		stmt = conn.prepareStatement(<span class="string">"INSERT INTO test2(id,name) VALUES(?,?)"</span>);</span><br><span class="line">		stmt.setInt(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">		stmt.setString(<span class="number">2</span>, <span class="string">"11"</span>); <span class="comment">// 故意长度超出</span></span><br><span class="line">		stmt.executeUpdate();</span><br><span class="line">		System.out.<span class="built_in">println</span>(<span class="string">"======insert into test2 successfully========"</span>);</span><br><span class="line">		stmt.close();</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>控制台输出<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">======<span class="keyword">insert</span> into test1 successfully======</span><br><span class="line"><span class="keyword">com</span>.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too long <span class="keyword">for</span> column <span class="string">'name'</span> at row <span class="number">1</span></span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.jav<span class="variable">a:3885</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.jav<span class="variable">a:3823</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.jav<span class="variable">a:2435</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.jav<span class="variable">a:2582</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.jav<span class="variable">a:2530</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.jav<span class="variable">a:1907</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.jav<span class="variable">a:2141</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.jav<span class="variable">a:2077</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.jav<span class="variable">a:2062</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mousycoder.server.jdbc.JdbcNoTransaction.insertTest2(JdbcNoTransaction.jav<span class="variable">a:61</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mousycoder.server.jdbc.JdbcNoTransaction.main(JdbcNoTransaction.jav<span class="variable">a:22</span>)</span><br></pre></td></tr></table></figure></p>
+<p>结果：<br>表test1有数据，表test2里没有数据，但是我们想让test1,test2 要么同时插入数据，要么都不插数据，这个时候就需要用到事务了。<br><strong>顺便提一下，如果让test1抛异常，那么直接异常处理，结果是test1没数据,test2也没数据，但是这里并不是用到了事务，而是异常处理改变了程序走向。</strong></p>
+<h3 id="利用JDBC事务的DEMO"><a href="#利用JDBC事务的DEMO" class="headerlink" title="利用JDBC事务的DEMO"></a>利用JDBC事务的DEMO</h3><p>Java</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mousycoder.server.jdbc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.Connection;</span><br><span class="line"><span class="keyword">import</span> java.sql.DriverManager;</span><br><span class="line"><span class="keyword">import</span> java.sql.PreparedStatement;</span><br><span class="line"><span class="keyword">import</span> java.sql.SQLException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> class JdbcTransaction &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">String</span> DB_DRIVER_CLASS = <span class="string">"com.mysql.jdbc.Driver"</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">String</span> DB_URL = <span class="string">"jdbc:mysql://xx.mysql.rds.aliyuncs.com/xxx"</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">String</span> DB_USERNAME = <span class="string">"xxx"</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">String</span> DB_PASSWORD = <span class="string">"xxx"</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span> INSERT_TEST1 = <span class="string">"INSERT INTO test1(id,name) VALUES(?,?)"</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span> INSERT_TEST2 = <span class="string">"INSERT INTO test2(id,name) VALUES(?,?)"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span>[] args) &#123;</span><br><span class="line">		Connection con = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			con = getConnection();</span><br><span class="line">			con.setAutoCommit(<span class="keyword">false</span>);</span><br><span class="line">			insertTest1(con);</span><br><span class="line">			insertTest2(con);</span><br><span class="line">			con.commit();</span><br><span class="line">			System.out.<span class="built_in">println</span>(<span class="string">"=======JDBC Transaction commit==========="</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (ClassNotFoundException|SQLException  e ) &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				con.rollback();</span><br><span class="line">				System.out</span><br><span class="line">						.<span class="built_in">println</span>(<span class="string">"=======JDBC Transaction rolled back successfully======="</span>);</span><br><span class="line">			&#125; <span class="keyword">catch</span> (SQLException e1) &#123;</span><br><span class="line">				System.out.<span class="built_in">println</span>(<span class="string">"=======SQL Exception in rollback"</span></span><br><span class="line">						+ e1.getMessage()); <span class="comment">// 回滚必要条件：1.同一个transaction</span></span><br><span class="line">											<span class="comment">// 2.connection未关，所以这里要加异常处理</span></span><br><span class="line">			&#125;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> (con != <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					con.close();</span><br><span class="line">				&#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> Connection getConnection() <span class="keyword">throws</span> ClassNotFoundException,</span><br><span class="line">			SQLException &#123;</span><br><span class="line">		Connection conn = <span class="keyword">null</span>;</span><br><span class="line">		Class.forName(DB_DRIVER_CLASS);</span><br><span class="line">		conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);</span><br><span class="line">		<span class="keyword">return</span> conn;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> insertTest1(Connection conn) <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">		PreparedStatement stmt;</span><br><span class="line">		stmt = conn.prepareStatement(<span class="string">"INSERT INTO test1(id,name) VALUES(?,?)"</span>);</span><br><span class="line">		stmt.setInt(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">		stmt.setString(<span class="number">2</span>, <span class="string">"1"</span>);</span><br><span class="line">		stmt.executeUpdate();</span><br><span class="line">		System.out.<span class="built_in">println</span>(<span class="string">"======insert into test1 successfully======"</span>);</span><br><span class="line">		stmt.close();</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> insertTest2(Connection conn) <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">		PreparedStatement stmt;</span><br><span class="line">		stmt = conn.prepareStatement(<span class="string">"INSERT INTO test2(id,name) VALUES(?,?)"</span>);</span><br><span class="line">		stmt.setInt(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">		stmt.setString(<span class="number">2</span>, <span class="string">"11"</span>); <span class="comment">// 故意长度超出</span></span><br><span class="line">		stmt.executeUpdate();</span><br><span class="line">		System.out.<span class="built_in">println</span>(<span class="string">"======insert into test2 successfully========"</span>);</span><br><span class="line">		stmt.close();</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>控制台输出</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">======<span class="keyword">insert</span> into test1 successfully======</span><br><span class="line">=======JDBC Transaction rolled back successfully=======</span><br><span class="line"><span class="keyword">com</span>.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too long <span class="keyword">for</span> column <span class="string">'name'</span> at row <span class="number">1</span></span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.jav<span class="variable">a:3885</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.jav<span class="variable">a:3823</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.jav<span class="variable">a:2435</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.jav<span class="variable">a:2582</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.jav<span class="variable">a:2530</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.jav<span class="variable">a:1907</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.jav<span class="variable">a:2141</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.jav<span class="variable">a:2077</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.jav<span class="variable">a:2062</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mousycoder.server.jdbc.JdbcTransaction.insertTest2(JdbcTransaction.jav<span class="variable">a:73</span>)</span><br><span class="line">    at <span class="keyword">com</span>.mousycoder.server.jdbc.JdbcTransaction.main(JdbcTransaction.jav<span class="variable">a:23</span>)</span><br></pre></td></tr></table></figure>
+<p>结果：<br>表test1和表test2是没有数据的，因为insertTest2方法抛出了异常，直接到异常处理，进行了手动的rollback(结束事务，回滚先前操作，释放掉锁),如果insertTest1()和insertTest2()都正常插入，则调用commit()方法(结束事务，提交先前改变，释放掉锁)</p>
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><p><strong>com.mysql.jdbc.ConnectionImpl.rollback()</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * The method rollback() drops all changes made since the previous</span><br><span class="line"> * commit/rollback and releases any database locks currently held by the</span><br><span class="line"> * Connection.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@exception</span> SQLException</span><br><span class="line"> *                if a database access error occurs</span><br><span class="line"> * <span class="doctag">@see</span> commit</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> void rollback() throws SQLException &#123;</span><br><span class="line">    synchronized (getConnectionMutex()) &#123;</span><br><span class="line">        checkClosed();</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.connectionLifecycleInterceptors != <span class="literal">null</span>) &#123;</span><br><span class="line">                IterateBlock&lt;Extension&gt; iter = new IterateBlock&lt;Extension&gt;(<span class="keyword">this</span>.connectionLifecycleInterceptors.iterator()) &#123;</span><br><span class="line"> </span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    void forEach(Extension each) throws SQLException &#123;</span><br><span class="line">                        <span class="keyword">if</span> (!((ConnectionLifecycleInterceptor) each).rollback()) &#123;</span><br><span class="line">                            <span class="keyword">this</span>.stopIterating = <span class="literal">true</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;;</span><br><span class="line"> </span><br><span class="line">                iter.doForAll();</span><br><span class="line"> </span><br><span class="line">                <span class="keyword">if</span> (!iter.fullIteration()) &#123;</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// no-op if _relaxAutoCommit == true</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.autoCommit &amp;&amp; !getRelaxAutoCommit()) &#123;</span><br><span class="line">                <span class="keyword">throw</span> SQLError.createSQLException(<span class="string">"Can't call rollback when autocommit=true"</span>, SQLError.SQL_STATE_CONNECTION_NOT_OPEN,</span><br><span class="line">                        getExceptionInterceptor());</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.transactionsSupported) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    rollbackNoChecks(); <span class="comment">//真正执行rollback地方，发送rollback指令到数据库</span></span><br><span class="line">                &#125; <span class="keyword">catch</span> (SQLException sqlEx) &#123;</span><br><span class="line">                    <span class="comment">// We ignore non-transactional tables if told to do so</span></span><br><span class="line">                    <span class="keyword">if</span> (getIgnoreNonTxTables() &amp;&amp; (sqlEx.getErrorCode() == SQLError.ER_WARNING_NOT_COMPLETE_ROLLBACK)) &#123;</span><br><span class="line">                        <span class="keyword">return</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">throw</span> sqlEx;</span><br><span class="line"> </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException sqlException) &#123;</span><br><span class="line">            <span class="keyword">if</span> (SQLError.SQL_STATE_COMMUNICATION_LINK_FAILURE.equals(sqlException.getSQLState())) &#123;</span><br><span class="line">                <span class="keyword">throw</span> SQLError.createSQLException(<span class="string">"Communications link failure during rollback(). Transaction resolution unknown."</span>,</span><br><span class="line">                        SQLError.SQL_STATE_TRANSACTION_RESOLUTION_UNKNOWN, getExceptionInterceptor());</span><br><span class="line">            &#125;</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">throw</span> sqlException;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.needsPing = <span class="keyword">this</span>.getReconnectAtTxEnd();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>解析：</p>
+<ol>
+<li>只允许拿到连接互斥锁的线程进入方法。</li>
+<li>检查连接是否被强制关闭，若被强制关闭，则抛出”No operations allowed after connection closed.” 异常。</li>
+<li>如果autoCommit且relaxAutoCommit为false，则抛出”Can’t call commit when autocommit=true”异常。</li>
+<li>如果使用本地事务状态以及MySql的版本号至少大于5.0.0并且事务在服务器上。</li>
+<li>如果支持事务，则执行。</li>
+<li>执行rollback。</li>
+</ol>
+<p><strong>com.mysql.jdbc.ConnectionImpl.commit()</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> void commit() throws SQLException &#123;</span><br><span class="line">     synchronized (getConnectionMutex()) &#123;</span><br><span class="line">         checkClosed();</span><br><span class="line"> </span><br><span class="line">         <span class="keyword">try</span> &#123;</span><br><span class="line">             <span class="keyword">if</span> (<span class="keyword">this</span>.connectionLifecycleInterceptors != <span class="literal">null</span>) &#123;</span><br><span class="line">                 IterateBlock&lt;Extension&gt; iter = new IterateBlock&lt;Extension&gt;(<span class="keyword">this</span>.connectionLifecycleInterceptors.iterator()) &#123;</span><br><span class="line"> </span><br><span class="line">                     <span class="meta">@Override</span></span><br><span class="line">                     void forEach(Extension each) throws SQLException &#123;</span><br><span class="line">                         <span class="keyword">if</span> (!((ConnectionLifecycleInterceptor) each).commit()) &#123;</span><br><span class="line">                             <span class="keyword">this</span>.stopIterating = <span class="literal">true</span>;</span><br><span class="line">                         &#125;</span><br><span class="line">                     &#125;</span><br><span class="line">                 &#125;;</span><br><span class="line"> </span><br><span class="line">                 iter.doForAll();</span><br><span class="line"> </span><br><span class="line">                 <span class="keyword">if</span> (!iter.fullIteration()) &#123;</span><br><span class="line">                     <span class="keyword">return</span>;</span><br><span class="line">                 &#125;</span><br><span class="line">             &#125;</span><br><span class="line"> </span><br><span class="line">             <span class="comment">// no-op if _relaxAutoCommit == true</span></span><br><span class="line">             <span class="keyword">if</span> (<span class="keyword">this</span>.autoCommit &amp;&amp; !getRelaxAutoCommit()) &#123;</span><br><span class="line">                 <span class="keyword">throw</span> SQLError.createSQLException(<span class="string">"Can't call commit when autocommit=true"</span>, getExceptionInterceptor());</span><br><span class="line">             &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.transactionsSupported) &#123;</span><br><span class="line">                 <span class="keyword">if</span> (getUseLocalTransactionState() &amp;&amp; versionMeetsMinimum(<span class="number">5</span>, <span class="number">0</span>, <span class="number">0</span>)) &#123;</span><br><span class="line">                     <span class="keyword">if</span> (!<span class="keyword">this</span>.io.inTransactionOnServer()) &#123;</span><br><span class="line">                         <span class="keyword">return</span>; <span class="comment">// effectively a no-op</span></span><br><span class="line">                     &#125;</span><br><span class="line">                 &#125;</span><br><span class="line"> </span><br><span class="line">                 execSQL(<span class="literal">null</span>, <span class="string">"commit"</span>, <span class="number">-1</span>, <span class="literal">null</span>, DEFAULT_RESULT_SET_TYPE, DEFAULT_RESULT_SET_CONCURRENCY, <span class="literal">false</span>, <span class="keyword">this</span>.database, <span class="literal">null</span>, <span class="literal">false</span>);</span><br><span class="line">             &#125;</span><br><span class="line">         &#125; <span class="keyword">catch</span> (SQLException sqlException) &#123;</span><br><span class="line">             <span class="keyword">if</span> (SQLError.SQL_STATE_COMMUNICATION_LINK_FAILURE.equals(sqlException.getSQLState())) &#123;</span><br><span class="line">                 <span class="keyword">throw</span> SQLError.createSQLException(<span class="string">"Communications link failure during commit(). Transaction resolution unknown."</span>,</span><br><span class="line">                         SQLError.SQL_STATE_TRANSACTION_RESOLUTION_UNKNOWN, getExceptionInterceptor());</span><br><span class="line">             &#125;</span><br><span class="line"> </span><br><span class="line">             <span class="keyword">throw</span> sqlException;</span><br><span class="line">         &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">             <span class="keyword">this</span>.needsPing = <span class="keyword">this</span>.getReconnectAtTxEnd();</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>解析：</p>
+<p>这段代码与rollback()基本一样，不同之处是commit()方法里执行的是 <code>execSQL(null, &quot;commit&quot;, -1, null, DEFAULT_RESULT_SET_TYPE, DEFAULT_RESULT_SET_CONCURRENCY, false, this.database, null, false);</code><br>rollback()方法里执行的是<code>execSQL(null, &quot;rollback&quot;, -1, null, DEFAULT_RESULT_SET_TYPE, DEFAULT_RESULT_SET_CONCURRENCY, false, this.database, null, false);</code></p>
+<p><strong>执行事务期间涉及到的sql</strong></p>
+<ul>
+<li><code>/* mysql-connector-java-5.1.34 ( Revision: jess.balint@oracle.com-20141014163213-wqbwpf1ok2kvo1om ) */SHOW VARIABLES WHERE Variable_name =&#39;language&#39; OR Variable_name = &#39;net_write_timeout&#39; OR Variable_name = &#39;interactive_timeout&#39; OR Variable_name = &#39;wait_timeout&#39; OR Variable_name = &#39;character_set_client&#39; OR Variable_name = &#39;character_set_connection&#39; OR Variable_name = &#39;character_set&#39; OR Variable_name = &#39;character_set_server&#39; OR Variable_name = &#39;tx_isolation&#39; OR Variable_name = &#39;transaction_isolation&#39; OR Variable_name = &#39;character_set_results&#39; OR Variable_name = &#39;timezone&#39; OR Variable_name = &#39;time_zone&#39; OR Variable_name = &#39;system_time_zone&#39; OR Variable_name = &#39;lower_case_table_names&#39; OR Variable_name = &#39;max_allowed_packet&#39; OR Variable_name = &#39;net_buffer_length&#39; OR Variable_name = &#39;sql_mode&#39; OR Variable_name = &#39;query_cache_type&#39; OR Variable_name = &#39;query_cache_size&#39; OR Variable_name = &#39;license&#39; OR Variable_name = &#39;init_connect&#39;</code></li>
+<li><code>/* mysql-connector-java-5.1.34 ( Revision: jess.balint@oracle.com-20141014163213-wqbwpf1ok2kvo1om ) */SELECT @@session.auto_increment_increment</code></li>
+<li><code>SET character_set_results = NULL</code></li>
+<li><code>SET autocommit=1</code></li>
+<li><code>SET sql_mode=&#39;STRICT_TRANS_TABLES&#39;</code></li>
+<li><code>SET autocommit=0</code></li>
+<li><code>select @@session.tx_read_only</code></li>
+</ul>
+<p>以上为不完全统计，jdbc包在执行一个真正的sql语句的时候，实际上会先执行一部分常用sql，把数据库的一些信息给缓存起来。</p>
+<h3 id="mysql-amp-oracle区别"><a href="#mysql-amp-oracle区别" class="headerlink" title="mysql&amp;oracle区别"></a>mysql&amp;oracle区别</h3><p><strong>oracle的commit详细步骤</strong></p>
+<ul>
+<li>SGA中生成undo块</li>
+<li>SGA中生成了产生改变的数据块和索引块</li>
+<li>SGA中生成前两项的缓存redo信息</li>
+<li>依赖于前三项产生的数据量大小以及操作所需要的时间，buffer中的数据可能已经有一部分输出到磁盘</li>
+<li>获得所需全部锁</li>
+<li>commit</li>
+<li>为事务生成一个SCN,SCN是oracle数据库的一种计时信息，用以保证事务的顺序性，同时还用于失败恢复和保证数据库的读一致性和检查点，无论何时何人提交,SCN自动加1</li>
+<li>将事务相关的未写入redo log file 中的redo信息从redo log buffer写入到redo log file ，这一步是真正的commit，这一步完成，才叫真正完成commit,事务条目从V$TRANSACTION中“删除</li>
+<li>V$LOCK中记录的SESSION关于该事务的锁会释放，其他需要这些锁的事务被唤醒</li>
+<li>执行块清理，清理快头保存的事务信息</li>
+</ul>
+<p><strong>oracle的rollback详细步骤</strong></p>
+<ul>
+<li>撤销已做的所有修改，从undo段读回数据，逆向执行commit中的操作，并将undo条目标记为已用，先前插入，则会删除，先前更新，则会回滚取消更新，先前删除，则回滚再次插入</li>
+<li>释放会话中所有的锁，唤醒等待锁。</li>
+</ul>
+<p><strong>mysql的commit详细步骤</strong></p>
+<ul>
+<li>InnoDB每次提交事务都会刷新日志innodb_log到磁盘，磁盘速度比较慢，不要频繁提交事务</li>
+</ul>
+<h2 id="JTA事务"><a href="#JTA事务" class="headerlink" title="JTA事务"></a>JTA事务</h2><p>JTA是一种高层，与实现无关，与协议无关的API，应用程序和应用服务器可以使用JTA来访问事务<br>计划用JTA界定事务，那么需要实现javax.sql.XADataSource、javax.sql.XAConnection、java.sql.XAResource。</p>
+<h2 id="容器事务"><a href="#容器事务" class="headerlink" title="容器事务"></a>容器事务</h2><p>基于JTA,以及JNDI完成，容器负责事务的管理任务。</p>
+<h2 id="三种事务差异"><a href="#三种事务差异" class="headerlink" title="三种事务差异"></a>三种事务差异</h2><ul>
+<li>JDBC 事务局限于一个数据库连接，使用简单。</li>
+<li>JTA事务功能强大，可以跨多个数据库多个DAO，比较复杂。</li>
+<li>容器事务，局限于EJB使用。</li>
+</ul>
+<h2 id="补充知识"><a href="#补充知识" class="headerlink" title="补充知识"></a>补充知识</h2><p>MySql常用命令</p>
+<ul>
+<li>查询隔离级别<br><code>select @@tx_isolation;</code></li>
+<li>设置手动提交<br><code>set autocommit=0 ;</code></li>
+<li>查看当前事务自动提交模式<br><code>select @@autocommit;</code></li>
+<li>设置隔离级别<br><code>set tx_isolation = &#39;READ-COMMITTED&#39;;</code></li>
+<li>查询表的状态<br><code>show table status like &#39;test1&#39;;</code></li>
+<li>修改表的存储引擎<br><code>alter table test1 engine = INNODB</code></li>
+<li>查看是否开启日志<br><code>show variables like &#39;log_bin&#39;;</code></li>
+<li>查看日志状态<br><code>show master status;</code></li>
+</ul>
+<hr>
+<p><strong>您的鼓励是作者写作最大的动力！</strong></p>
+<p>如果您认为本站的文章质量不错，读后觉得收获很大，预期工资涨幅能超过30%，不妨小额赞助我一下，让我有动力继续写出高质量的教程。</p>
+<ul>
+<li>支付宝<br><img src="http://static.mousycoder.com/16-1-15/19697314.jpg" alt=""></li>
+<li>微信<br><img src="http://static.mousycoder.com/16-1-15/64333912.jpg" alt=""></li>
+</ul>
+<p>作 者 : <a href="http://weibo.com/mousycoder" target="_blank" rel="external">@mousycoder</a></p>
+<p>原文出处 : <a href="http://mousycoder.com/2016/02/15/explain-transaction-in-simple-language-2/">http://mousycoder.com/2016/02/15/explain-transaction-in-simple-language-2/</a></p>
+<p>创作时间：2016-2-15</p>
+<p>更新时间：2016-2-15</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/15/explain-transaction-in-simple-language-1/" rel="next" title="【深入浅出事务】（1）：事务的本质">
+                <i class="fa fa-chevron-left"></i> 【深入浅出事务】（1）：事务的本质
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/02/19/explain-transaction-in-simple-language-3/" rel="prev" title="【深入浅出事务】（3）：事务的隔离级别（超详细）">
+                【深入浅出事务】（3）：事务的隔离级别（超详细） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/02/15/explain-transaction-in-simple-language-2/"
+           data-title="【深入浅出事务】（2）：Java的事务" data-url="http://mousycoder.com/2016/02/15/explain-transaction-in-simple-language-2/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/6722977?v=3&s=460"
+               alt="mousycoder" />
+          <p class="site-author-name" itemprop="name">mousycoder</p>
+          <p class="site-description motion-element" itemprop="description">虚心学习，乐于分享</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">51</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-twitter"></i> Twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/mousycoder" target="_blank">
+                  
+                    <i class="fa fa-douban"></i> DouBan
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/mousy_coder" target="_blank">
+                  
+                    <i class="fa fa-zhiHu"></i> ZhiHu
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">Links</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" target="_blank">MacTalk</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xiongyingqi.com/" target="_blank">熊瑛琪</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" target="_blank">何登成</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yuguo.us/" target="_blank">Yuguo</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ido321.com/" target="_blank">淡忘浅思</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://blog.jamespan.me/" target="_blank">潘家邦</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.webank.pw/" target="_blank">丁佳学</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/jiuyuehe/" target="_blank">肖敏</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cyblogs.com/" target="_blank">陈袁</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JDBC事务"><span class="nav-number">1.</span> <span class="nav-text">JDBC事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#不用JDBC事务的DEMO"><span class="nav-number">1.1.</span> <span class="nav-text">不用JDBC事务的DEMO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#利用JDBC事务的DEMO"><span class="nav-number">1.2.</span> <span class="nav-text">利用JDBC事务的DEMO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源码分析"><span class="nav-number">1.3.</span> <span class="nav-text">源码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql-amp-oracle区别"><span class="nav-number">1.4.</span> <span class="nav-text">mysql&oracle区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JTA事务"><span class="nav-number">2.</span> <span class="nav-text">JTA事务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器事务"><span class="nav-number">3.</span> <span class="nav-text">容器事务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三种事务差异"><span class="nav-number">4.</span> <span class="nav-text">三种事务差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#补充知识"><span class="nav-number">5.</span> <span class="nav-text">补充知识</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mousycoder</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://weibo.com/mousycoder">mousycoder</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/mousycoder/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_pv">
+    总访问量：<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
+<span id="busuanzi_container_site_uv">
+  访客数：<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"mousycoder"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
